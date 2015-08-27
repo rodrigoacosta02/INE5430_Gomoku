@@ -1,7 +1,10 @@
 package com.aguiarcampos.gomoku.core;
 
+import lombok.Getter;
+
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import com.google.common.primitives.UnsignedInts;
 
 public class GomokuState {
 
@@ -34,6 +37,7 @@ public class GomokuState {
 	/**
 	 * indicação do jogador da rodada atual
 	 */
+	@Getter
 	private String jogadorAtual;
 
 	/**
@@ -45,6 +49,7 @@ public class GomokuState {
 	 * biblioteca google Table<Rows, Columns, Value> Table que associa posição X,Y do
 	 * tabuleiro com a peça 
 	 */
+	@Getter
 	private Table<Integer, Integer, String> posicaoPecas;
 	
 
@@ -97,6 +102,8 @@ public class GomokuState {
 	 * @return
 	 */
 	public boolean realizarJogada(int linha, int coluna) {
+		
+		System.out.println(linha + " " + coluna);
 		//colaca na Table a posição da jogada e o jogador
 		this.posicaoPecas.put(linha, coluna, jogadorAtual);
 		
