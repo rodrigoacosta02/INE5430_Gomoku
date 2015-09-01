@@ -6,7 +6,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.primitives.UnsignedInts;
 
-public class GomokuState {
+public class GomokuJogo {
 
 	/**
 	 * indica tamanho do tabuleiro
@@ -14,7 +14,7 @@ public class GomokuState {
 	private static final int tamanhoTabuleiro = 15;
 
 	/**
-	 * check que representa o numero de sequecia mínima de peças seguidas para vencer o
+	 * check que representa o numero de sequencia mínima de peças seguidas para vencer o
 	 * jogo
 	 */
 	private static final int check = 5;
@@ -46,14 +46,14 @@ public class GomokuState {
 	private boolean vencedor = false;
 	
 	/**
-	 * biblioteca google Table<Rows, Columns, Value> Table que associa posição X,Y do
+	 * biblioteca google guava - Table<Linha, Coluna, Valor> Table que associa posição X,Y do
 	 * tabuleiro com a peça 
 	 */
 	@Getter
 	private Table<Integer, Integer, String> posicaoPecas;
 	
 
-	public GomokuState() {
+	public GomokuJogo() {
 		//jogador inicial - padrão de início peças pretas
 		this.jogadorAtual = PRETA;
 		posicaoPecas = HashBasedTable.create();

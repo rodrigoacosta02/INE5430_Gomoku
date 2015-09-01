@@ -10,10 +10,10 @@ import java.util.Scanner;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.aguiarcampos.gomoku.core.GomokuState;
+import com.aguiarcampos.gomoku.core.GomokuJogo;
 
 public class GomokuStateTest {
-	static GomokuState gs;
+	static GomokuJogo gs;
 	static Scanner inFile;
 
 	@BeforeClass
@@ -26,7 +26,7 @@ public class GomokuStateTest {
 	public final void testGomokuState() {
 		int limiteLinha = 15;
 		int limiteColuna = 15;
-		gs = new GomokuState();
+		gs = new GomokuJogo();
 		
 		assertEquals(limiteLinha, gs.getPosicaoPecas().rowKeySet().size());
 		assertEquals(limiteColuna, gs.getPosicaoPecas().columnKeySet().size());
@@ -41,7 +41,7 @@ public class GomokuStateTest {
 	@Test
 	public final void testGetValorCasa() {
 		System.out.println(gs.getPosicaoPecas().containsValue(gs.BRANCA));
-		gs = new GomokuState();
+		gs = new GomokuJogo();
 		for (int i = 0; i < 4; i++) {
 			int linha = (int) (Math.random() * 15);
 			int coluna = (int) (Math.random() * 15);
@@ -57,7 +57,7 @@ public class GomokuStateTest {
 
 	@Test
 	public final void testGetJogadorAtual() throws FileNotFoundException {
-		gs = new GomokuState();
+		gs = new GomokuJogo();
 		inFile = new Scanner(new FileReader("/home/user_ufsc/teste"));
 		int jogada = 0;
 		int linha;
@@ -76,7 +76,7 @@ public class GomokuStateTest {
 
 	@Test
 	public final void testGetVencedor() throws FileNotFoundException {
-		gs = new GomokuState();
+		gs = new GomokuJogo();
 		inFile = new Scanner(new FileReader("/home/user_ufsc/teste"));
 		int linha;
 		int coluna;
@@ -96,7 +96,7 @@ public class GomokuStateTest {
 
 	@Test
 	public final void testRealizarJogada() throws FileNotFoundException {
-		gs = new GomokuState();
+		gs = new GomokuJogo();
 		inFile = new Scanner(new FileReader("/home/user_ufsc/teste"));
 		int linha;
 		int coluna;

@@ -19,7 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.aguiarcampos.gomoku.core.GomokuState;
+import com.aguiarcampos.gomoku.core.GomokuJogo;
 
 
 /**
@@ -35,13 +35,13 @@ class GomokuPanel extends JPanel implements ActionListener {
 	private final String comandoInicioComp = "PC_JOGA";
 	
 	private int size = 15;
-	private GomokuState state;
+	private GomokuJogo state;
 	private JFrame frame;
 
 	public GomokuPanel(JFrame frame) {
 		super();
 		this.frame = frame;
-		state = new GomokuState();
+		state = new GomokuJogo();
 		addMouseListener(new GomokuListener());
 		JButton reiniciarPartida;
 		reiniciarPartida = new JButton("Nova partida");
@@ -68,7 +68,7 @@ class GomokuPanel extends JPanel implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if (comandoReiniciar.equals(e.getActionCommand())) {
-			state = new GomokuState();
+			state = new GomokuJogo();
 			addMouseListener(new GomokuListener());
 			repaint();
 		}
@@ -102,17 +102,17 @@ class GomokuPanel extends JPanel implements ActionListener {
 			 * ocorreu um vencedor impedindo novas jogadas
 			 */
 			if (row >= 0 && row < size && col >= 0 && col < size
-					&& state.getValorCasa(row, col).equals(GomokuState.VAZIO)
-					&& state.getVencedor().equals(GomokuState.VAZIO)) {
+					&& state.getValorCasa(row, col).equals(GomokuJogo.VAZIO)
+					&& state.getVencedor().equals(GomokuJogo.VAZIO)) {
 				state.realizarJogada(row, col);
 				repaint();
 				String vencedor = state.getVencedor();
 				// exibe uma msg de vitória na tela
-				if (!vencedor.equals(GomokuState.VAZIO))
+				if (!vencedor.equals(GomokuJogo.VAZIO))
 					JOptionPane
 							.showMessageDialog(
 									frame,
-									(vencedor.equals(GomokuState.PRETA)) ? "Vencedor pedras PRETAS!"
+									(vencedor.equals(GomokuJogo.PRETA)) ? "Vencedor pedras PRETAS!"
 											: "Vencedor pedras BRANCAS!!");
 			}
 		}
@@ -149,8 +149,8 @@ class GomokuPanel extends JPanel implements ActionListener {
 		for (int row = 0; row < size; row++)
 			for (int col = 0; col < size; col++) {
 				String piece = state.getValorCasa(row, col);
-				if (!piece.equals(GomokuState.VAZIO)) {
-					Color c = (piece.equals(GomokuState.PRETA)) ? Color.BLACK
+				if (!piece.equals(GomokuJogo.VAZIO)) {
+					Color c = (piece.equals(GomokuJogo.PRETA)) ? Color.BLACK
 							: Color.WHITE;
 					g2.setColor(c);
 
