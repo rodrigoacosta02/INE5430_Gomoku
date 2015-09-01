@@ -142,7 +142,7 @@ public class GomokuJogo {
 	}
 
 	/**
-	 * verifica se existem o míinimo de 5 casas do mesmo jogador em linha 
+	 * verifica se existem o mínimo de 5 casas do mesmo jogador em linha 
 	 * @param linhaFixa
 	 * @param coluna
 	 * @param jogador
@@ -168,7 +168,7 @@ public class GomokuJogo {
 	}
 
 	/**
-	 * verifica se existem o míinimo de 5 casas do mesmo jogador em coluna
+	 * verifica se existem o mínimo de 5 casas do mesmo jogador em coluna
 	 * @param linha
 	 * @param colunaFixa
 	 * @param jogador
@@ -195,7 +195,7 @@ public class GomokuJogo {
 	}
 
 	/**
-	 * verifica se existem o míinimo de 5 casas do mesmo jogador em diagonal ("\")
+	 * verifica se existem o mínimo de 5 casas do mesmo jogador em diagonal ("\")
 	 * @param linha
 	 * @param coluna
 	 * @param jogador
@@ -225,7 +225,7 @@ public class GomokuJogo {
 	}
 
 	/**
-	 * verifica se existem o míinimo de 5 casas do mesmo jogador em diagonal ("/")
+	 * verifica se existem o mínimo de 5 casas do mesmo jogador em diagonal ("/")
 	 * @param linha
 	 * @param coluna
 	 * @param jogador
