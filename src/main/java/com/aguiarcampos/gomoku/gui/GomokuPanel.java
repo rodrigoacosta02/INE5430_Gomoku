@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.aguiarcampos.gomoku.core.Computer;
 import com.aguiarcampos.gomoku.core.GomokuJogo;
 
 
@@ -28,15 +29,16 @@ import com.aguiarcampos.gomoku.core.GomokuJogo;
  * http://cs.gettysburg.edu/~tneller/cs111/gomoku/gui/Gomoku.java
  *
  */
-class GomokuPanel extends JPanel implements ActionListener {
+public class GomokuPanel extends JPanel implements ActionListener {
 	private final int MARGIN = 5;
 	private final double PIECE_FRAC = 0.9;
 	private final String comandoReiniciar = "REINICIAR";
 	private final String comandoInicioComp = "PC_JOGA";
 	
 	private int size = 15;
-	private GomokuJogo state;
+	public GomokuJogo state;
 	private JFrame frame;
+	private Computer c;
 
 	public GomokuPanel(JFrame frame) {
 		super();
@@ -56,9 +58,6 @@ class GomokuPanel extends JPanel implements ActionListener {
 		computadorIniciaPartida.setHorizontalTextPosition(AbstractButton.CENTER);
 		computadorIniciaPartida.setActionCommand(comandoInicioComp);
 		
-		
-		
-		
 		reiniciarPartida.addActionListener(this);
 		computadorIniciaPartida.addActionListener(this);
 		add(reiniciarPartida);
@@ -71,11 +70,18 @@ class GomokuPanel extends JPanel implements ActionListener {
 			state = new GomokuJogo();
 			addMouseListener(new GomokuListener());
 			repaint();
+			try {
+				c.pararJogo();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		
 		if (comandoInicioComp.equals(e.getActionCommand())) {
 			//TODO pc inicia game
 			System.out.println("I will beat you");
+			c = new Computer(this);
 		}
 		
 
@@ -96,25 +102,7 @@ class GomokuPanel extends JPanel implements ActionListener {
 			int col = (int) Math.round((e.getX() - xLeft) / squareWidth - 0.5);
 			int row = (int) Math.round((e.getY() - yTop) / squareWidth - 0.5);
 
-			/*
-			 * verificação se local do clique está dentro das delimitações do
-			 * tabuleiro se o valor da casa que foi clicada está vazia e se já
-			 * ocorreu um vencedor impedindo novas jogadas
-			 */
-			if (row >= 0 && row < size && col >= 0 && col < size
-					&& state.getValorCasa(row, col).equals(GomokuJogo.VAZIO)
-					&& state.getVencedor().equals(GomokuJogo.VAZIO)) {
-				state.realizarJogada(row, col);
-				repaint();
-				String vencedor = state.getVencedor();
-				// exibe uma msg de vitória na tela
-				if (!vencedor.equals(GomokuJogo.VAZIO))
-					JOptionPane
-							.showMessageDialog(
-									frame,
-									(vencedor.equals(GomokuJogo.PRETA)) ? "Vencedor pedras PRETAS!"
-											: "Vencedor pedras BRANCAS!!");
-			}
+			verificacaoJogada(row, col);
 		}
 	}
 
@@ -164,6 +152,34 @@ class GomokuPanel extends JPanel implements ActionListener {
 					g2.draw(circle);
 				}
 			}
+	}
+
+	/**
+	 * verificação se local do clique está dentro das delimitações do
+	 * tabuleiro se o valor da casa que foi clicada está vazia e se já
+	 * ocorreu um vencedor impedindo novas jogadas
+	 * @param linha
+	 * @param coluna
+	 * @return false se jogo nao acabou
+	 */
+	public boolean verificacaoJogada(int linha, int coluna) {
+		if (linha >= 0 && linha < size && coluna >= 0 && coluna < size
+				&& state.getValorCasa(linha, coluna).equals(GomokuJogo.VAZIO)
+				&& state.getVencedor().equals(GomokuJogo.VAZIO)) {
+			state.realizarJogada(linha, coluna);
+			repaint();
+			String vencedor = state.getVencedor();
+			// exibe uma msg de vitória na tela
+			if (!vencedor.equals(GomokuJogo.VAZIO)){
+				JOptionPane
+						.showMessageDialog(
+								frame,
+								(vencedor.equals(GomokuJogo.PRETA)) ? "Vencedor pedras PRETAS!"
+										: "Vencedor pedras BRANCAS!!");
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
