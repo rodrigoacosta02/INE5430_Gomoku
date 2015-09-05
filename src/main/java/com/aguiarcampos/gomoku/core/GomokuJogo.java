@@ -11,7 +11,7 @@ public class GomokuJogo {
 	/**
 	 * indica tamanho do tabuleiro
 	 */
-	private static final int tamanhoTabuleiro = 15;
+	public static final int tamanhoTabuleiro = 15;
 
 	/**
 	 * check que representa o numero de sequencia mínima de peças seguidas para vencer o
@@ -150,7 +150,7 @@ public class GomokuJogo {
 	 */
 	private int verificarLinha(int linhaFixa, int coluna, String jogador) {
 		int contador = 1;
-		while (posicaoPecas.containsColumn(++coluna) && contador < 5) {
+		while (posicaoPecas.containsColumn(++coluna) && contador < check) {
 			if (posicaoPecas.get(linhaFixa, coluna).equals(jogador)) {
 				contador++;
 			}else
@@ -158,7 +158,7 @@ public class GomokuJogo {
 		}
 		//retorna ao valor coluna ao seu ponto original
 		coluna -= contador;
-		while (posicaoPecas.containsColumn(--coluna) && contador < 5) {
+		while (posicaoPecas.containsColumn(--coluna) && contador < check) {
 			if (posicaoPecas.get(linhaFixa, coluna).equals(jogador)) {
 				contador++;
 			}else
@@ -177,7 +177,7 @@ public class GomokuJogo {
 	private int verificarColuna(int linha, int colunaFixa, String jogador) {
 		int contador = 1;
 
-		while (posicaoPecas.containsRow(++linha) && contador < 5) {
+		while (posicaoPecas.containsRow(++linha) && contador < check) {
 			if (posicaoPecas.get(linha, colunaFixa).equals(jogador))
 				contador++;
 			else
@@ -185,7 +185,7 @@ public class GomokuJogo {
 		}
 		//retorna ao valor linha ao seu ponto original
 		linha -= contador;
-		while (posicaoPecas.containsRow(--linha) && contador < 5) {
+		while (posicaoPecas.containsRow(--linha) && contador < check) {
 			if (posicaoPecas.get(linha, colunaFixa).equals(jogador))
 				contador++;
 			else
@@ -205,7 +205,7 @@ public class GomokuJogo {
 		int contador = 1;
 
 		while (posicaoPecas.containsRow(++linha)
-				&& posicaoPecas.containsColumn(++coluna)  && contador < 5) {
+				& posicaoPecas.containsColumn(++coluna)  && contador < check) {
 			if (posicaoPecas.get(linha, coluna).equals(jogador))
 				contador++;
 			else
@@ -215,7 +215,7 @@ public class GomokuJogo {
 		linha -= contador;
 		coluna -= contador;
 		while (posicaoPecas.containsRow(--linha)
-				&& posicaoPecas.containsColumn(--coluna) && contador < 5) {
+				&& posicaoPecas.containsColumn(--coluna) && contador < check) {
 			if (posicaoPecas.get(linha, coluna).equals(jogador))
 				contador++;
 			else
@@ -235,7 +235,7 @@ public class GomokuJogo {
 		int contador = 1;
 
 		while (posicaoPecas.containsRow(++linha)
-				&& posicaoPecas.containsColumn(--coluna) && contador < 5) {
+				& posicaoPecas.containsColumn(--coluna) && contador < check) {
 			if (posicaoPecas.get(linha, coluna).equals(jogador))
 				contador++;
 			else
@@ -245,7 +245,7 @@ public class GomokuJogo {
 		linha -= contador;
 		coluna += contador;
 		while (posicaoPecas.containsRow(--linha)
-				&& posicaoPecas.containsColumn(++coluna) && contador < 5) {
+				&& posicaoPecas.containsColumn(++coluna) && contador < check) {
 			if (posicaoPecas.get(linha, coluna).equals(jogador))
 				contador++;
 			else

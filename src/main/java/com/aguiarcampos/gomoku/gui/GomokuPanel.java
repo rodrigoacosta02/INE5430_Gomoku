@@ -35,7 +35,6 @@ public class GomokuPanel extends JPanel implements ActionListener {
 	private final String comandoReiniciar = "REINICIAR";
 	private final String comandoInicioComp = "PC_JOGA";
 	
-	private int size = 15;
 	public GomokuJogo state;
 	private JFrame frame;
 	private Computer c;
@@ -94,7 +93,7 @@ public class GomokuPanel extends JPanel implements ActionListener {
 			double panelHeight = getHeight();
 
 			double boardWidth = Math.min(panelWidth, panelHeight) - 2 * MARGIN;
-			double squareWidth = boardWidth / size;
+			double squareWidth = boardWidth / GomokuJogo.tamanhoTabuleiro;
 
 			double xLeft = (panelWidth - boardWidth) / 2 + MARGIN;
 			double yTop = (panelHeight - boardWidth) / 2 + MARGIN;
@@ -118,15 +117,15 @@ public class GomokuPanel extends JPanel implements ActionListener {
 		g2.fill(new Rectangle2D.Double(0, 0, panelWidth, panelHeight));
 
 		double boardWidth = Math.min(panelWidth, panelHeight) - 2 * MARGIN;
-		double squareWidth = boardWidth / size;
-		double gridWidth = (size - 1) * squareWidth;
+		double squareWidth = boardWidth / GomokuJogo.tamanhoTabuleiro;
+		double gridWidth = (GomokuJogo.tamanhoTabuleiro - 1) * squareWidth;
 		double pieceDiameter = PIECE_FRAC * squareWidth;
 		boardWidth -= pieceDiameter;
 		double xLeft = (panelWidth - boardWidth) / 2 + MARGIN;
 		double yTop = (panelHeight - boardWidth) / 2 + MARGIN;
 
 		g2.setColor(Color.BLACK);
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < GomokuJogo.tamanhoTabuleiro; i++) {
 			double offset = i * squareWidth;
 			g2.draw(new Line2D.Double(xLeft, yTop + offset, xLeft + gridWidth,
 					yTop + offset));
@@ -134,8 +133,8 @@ public class GomokuPanel extends JPanel implements ActionListener {
 					yTop + gridWidth));
 		}
 
-		for (int row = 0; row < size; row++)
-			for (int col = 0; col < size; col++) {
+		for (int row = 0; row < GomokuJogo.tamanhoTabuleiro; row++)
+			for (int col = 0; col < GomokuJogo.tamanhoTabuleiro; col++) {
 				String piece = state.getValorCasa(row, col);
 				if (!piece.equals(GomokuJogo.VAZIO)) {
 					Color c = (piece.equals(GomokuJogo.PRETA)) ? Color.BLACK
@@ -163,7 +162,7 @@ public class GomokuPanel extends JPanel implements ActionListener {
 	 * @return false se jogo nao acabou
 	 */
 	public boolean verificacaoJogada(int linha, int coluna) {
-		if (linha >= 0 && linha < size && coluna >= 0 && coluna < size
+		if (linha >= 0 && linha < GomokuJogo.tamanhoTabuleiro && coluna >= 0 && coluna < GomokuJogo.tamanhoTabuleiro
 				&& state.getValorCasa(linha, coluna).equals(GomokuJogo.VAZIO)
 				&& state.getVencedor().equals(GomokuJogo.VAZIO)) {
 			state.realizarJogada(linha, coluna);
