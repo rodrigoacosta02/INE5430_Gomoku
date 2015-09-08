@@ -11,8 +11,8 @@ public class Computer implements Runnable {
 		while (!pararJogada) {
 			
 			System.out.println("Hello from a thread!");
-			int linha = (int) (Math.random() * 15);
-			int coluna = (int) (Math.random() * 15);
+			int linha = (int) (Math.random() * GomokuJogo.tamanhoTabuleiro);
+			int coluna = (int) (Math.random() * GomokuJogo.tamanhoTabuleiro);
 			pararJogada = panel.verificacaoJogada(linha, coluna);
 			System.out.println(linha + " - " + coluna);
 			try {

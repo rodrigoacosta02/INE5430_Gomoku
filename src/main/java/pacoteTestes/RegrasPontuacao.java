@@ -1,96 +1,13 @@
-package com.aguiarcampos.gomoku.core;
+package pacoteTestes;
+import com.aguiarcampos.gomoku.core.GomokuJogo;
 
 
-public class GomokuJogo extends Tabuleiro{
+public class RegrasPontuacao extends GomokuJogo {
 
-	/**
-	 * indica tamanho do tabuleiro
-	 */
-	public static final int tamanhoTabuleiro = 3;
-
-	/**
-	 * check que representa o numero de sequencia mínima de peças seguidas para vencer o
-	 * jogo
-	 */
-	public static final int check = 3;
-
-	/**
-	 * Representação do Jogador com a peça preta
-	 */
-	public static final String PRETA = "PRETA";
-	
-	/**
-	 * Representação de nenhuma peça
-	 */
-	public static final String VAZIO = "VAZIO";
-	
-	/**
-	 * Representação do Jogador com a peça branca
-	 */
-	public static final String BRANCA = "BRANCA";
-
-	/**
-	 * indicação do jogador da rodada atual
-	 */
-	private String jogadorAtual;
-
-	/**
-	 * variável booleana auxiliar para determinar vencedor
-	 */
-	private boolean vencedor = false;
-
-	/**
-	 * Construtor padrao
-	 */
-	public GomokuJogo() {
-		//inicializa a classe extendida
-		super();
-//		jogador inicial - padrão de início peças pretas
-		this.jogadorAtual = PRETA;
-	}
-
-	/**
-	 * Retorna próximo jogador
-	 * @return
-	 */
-	public String getJogadorAtual() {
-		return jogadorAtual;
-	}
-	/**
-	 * Se vencedor = True - retorna jogador vencedor senão retorna vazio
-	 * @return
-	 */
-	public String getVencedor() {
-		if (vencedor) {
-			return jogadorAtual;
-		}
-		return VAZIO;
-	}
-
-	/**
-	 * Realiza jogada settando os valores
-	 * @param linha
-	 * @param coluna
-	 * @return
-	 */
-	public boolean realizarJogada(int linha, int coluna) {
-		moverPeca(linha, coluna, jogadorAtual);
-		
-		//verifica se na jogada atual houve um vencedor
-		vencedor = verificarJogada(linha, coluna, jogadorAtual);
-		
-		//se não existir vencedor muda de jogador
-		if (!vencedor) {
-			jogadorAtual = jogadorAtual.equals(PRETA) ? BRANCA : PRETA;
-		}
-		return true;
-	}
+	private int pontuacao;
 	
 	
-	/*	
-	####################################################################
-						vertificacoes de jogadas
-	*/	
+	
 	
 	/**
 	 * verificar possibilidades de vitória da jogada nas 4 direções possíveis
@@ -124,22 +41,27 @@ public class GomokuJogo extends Tabuleiro{
 	 * @return
 	 */
 	public int verificarLinha(int linhaFixa, int coluna, String jogador) {
-		int contador = 1;
-		while (tabuleiro.containsColumn(++coluna) && contador < check) {
+		int qntPecas = 1;
+		int casasVazias = 0;
+		while (tabuleiro.containsColumn(++coluna) && qntPecas < check) {
 			if (tabuleiro.get(linhaFixa, coluna).equals(jogador)) {
-				contador++;
-			}else
+				qntPecas++;
+			}else if (tabuleiro.get(linhaFixa, coluna).equals(GomokuJogo.VAZIO) ) {
+				casasVazias++;
+			} else
 				break;
 		}
 		//retorna ao valor coluna ao seu ponto original
-		coluna -= contador;
-		while (tabuleiro.containsColumn(--coluna) && contador < check) {
+		coluna -= qntPecas;
+		while (tabuleiro.containsColumn(--coluna) && qntPecas < check) {
 			if (tabuleiro.get(linhaFixa, coluna).equals(jogador)) {
-				contador++;
-			}else
+				qntPecas++;
+			}else if (tabuleiro.get(linhaFixa, coluna).equals(GomokuJogo.VAZIO) ) {
+				casasVazias++;
+			} else
 				break;
 		}
-		return contador;
+		return qntPecas;
 	}
 
 	/**
@@ -229,4 +151,5 @@ public class GomokuJogo extends Tabuleiro{
 		return contador;
 	}
 
+	
 }
