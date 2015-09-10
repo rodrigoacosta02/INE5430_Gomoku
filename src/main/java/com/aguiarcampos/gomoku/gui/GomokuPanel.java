@@ -101,7 +101,12 @@ public class GomokuPanel extends JPanel implements ActionListener {
 			int col = (int) Math.round((e.getX() - xLeft) / squareWidth - 0.5);
 			int row = (int) Math.round((e.getY() - yTop) / squareWidth - 0.5);
 
-			verificacaoJogada(row, col);
+			try {
+				verificacaoJogada(row, col);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 
@@ -160,8 +165,9 @@ public class GomokuPanel extends JPanel implements ActionListener {
 	 * @param linha
 	 * @param coluna
 	 * @return false se jogo nao acabou
+	 * @throws Exception 
 	 */
-	public boolean verificacaoJogada(int linha, int coluna) {
+	public boolean verificacaoJogada(int linha, int coluna) throws Exception {
 		if (linha >= 0 && linha < GomokuJogo.tamanhoTabuleiro && coluna >= 0 && coluna < GomokuJogo.tamanhoTabuleiro
 				&& state.getValorCasa(linha, coluna).equals(GomokuJogo.VAZIO)
 				&& state.getVencedor().equals(GomokuJogo.VAZIO)) {

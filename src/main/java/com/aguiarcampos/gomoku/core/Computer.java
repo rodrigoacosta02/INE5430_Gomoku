@@ -2,18 +2,72 @@ package com.aguiarcampos.gomoku.core;
 
 import com.aguiarcampos.gomoku.gui.GomokuPanel;
 
-public class Computer implements Runnable {
-	
+public class Computer extends IA_teste implements Runnable {
+	private static final boolean aleatorio = true;
 	GomokuPanel panel;
-	boolean jogando = false;
 	public void run() {
+		if (aleatorio) {
+			jogoAleatorio();
+		} else {
+			try {
+				IA_fraca();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void IA_fraca() throws Exception {
+		// TODO Auto-generated method stub
+		
+		MelhorJogada mj = this.miniM(3, panel.state.getTabuleiro(), panel.state.getJogadorAtual());
+		
 		boolean pararJogada = false;
 		while (!pararJogada) {
 			
-			System.out.println("Hello from a thread!");
+			System.out.println("Jogo IA!");
+			try {
+				pararJogada = panel.verificacaoJogada(mj.jogada.x, mj.jogada.y);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			System.out.println(mj.jogada.x + " - " + mj.jogada.y);
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	static Thread t ;
+	
+	public Computer(GomokuPanel gomokuPanel) {
+		//TODO somente inicializar uma vez ??
+		this.panel = gomokuPanel;
+		t = new Thread(this);
+		t.start();
+	}
+	
+	public void pararJogo() throws InterruptedException{
+		t.interrupted();
+	}
+	
+	public void jogoAleatorio() {
+		boolean pararJogada = false;
+		while (!pararJogada) {
+			
+			System.out.println("Jogo aleatório!");
 			int linha = (int) (Math.random() * GomokuJogo.tamanhoTabuleiro);
 			int coluna = (int) (Math.random() * GomokuJogo.tamanhoTabuleiro);
-			pararJogada = panel.verificacaoJogada(linha, coluna);
+			try {
+				pararJogada = panel.verificacaoJogada(linha, coluna);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			System.out.println(linha + " - " + coluna);
 			try {
 				Thread.sleep(500);
@@ -21,23 +75,6 @@ public class Computer implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		this.jogando = false;
-	}
-
-	static Thread t ;
-	
-	public Computer(GomokuPanel gomokuPanel) {
-		//TODO somente inicializar uma vez SINGLETON?
-		if (!jogando) {
-			this.panel = gomokuPanel;
-			t = new Thread(this);
-			t.start();
-		}
-		this.jogando = true;
-	}
-	
-	public void pararJogo() throws InterruptedException{
-		t.interrupted();
 	}
 	
 }

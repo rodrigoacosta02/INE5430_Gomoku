@@ -17,7 +17,6 @@ public class Tabuleiro {
 	 * biblioteca google guava - Table<Linha, Coluna, Valor> Table que associa posição X,Y do
 	 * tabuleiro com a peça 
 	 */
-	@Getter
 	protected Table<Integer, Integer, String> tabuleiro;
 
 	/**
@@ -27,7 +26,6 @@ public class Tabuleiro {
 	private Set<Point> possiveisJogadas;
 	
 	
-	private Table<Integer, Integer, Integer> pontuacaoCasas;
 	/**
 	 * Construtor padrao
 	 */
@@ -39,7 +37,6 @@ public class Tabuleiro {
 			for (int j = 0; j < GomokuJogo.tamanhoTabuleiro; j++) {
 				tabuleiro.put(i, j, GomokuJogo.VAZIO);
 				possiveisJogadas.add(new Point(i, j));
-				pontuacaoCasas.put(i, j, 0);
 			}
 		}
 	}
@@ -54,7 +51,19 @@ public class Tabuleiro {
 		atualizarPossiveisJogadas();
 	}
 	
-	public boolean moverPeca(int linha, int coluna, String jogador) {
+	/**
+	 * Move uma peça para qualquer local do tabuleiro
+	 * @param linha
+	 * @param coluna
+	 * @param jogador
+	 * @return
+	 * @throws Exception Casa do tabuleiro ja ocupada
+	 */
+	public boolean moverPeca(int linha, int coluna, String jogador) throws Exception {
+		//validacao de peça existente na casa
+		if (!this.tabuleiro.get(linha, coluna).equals(GomokuJogo.VAZIO)) {
+			throw new Exception("Casa invalida - jah possui peca");
+		}
 		//colaca na Table a posição da jogada e o jogador
 		this.tabuleiro.put(linha, coluna, jogador);
 		possiveisJogadas.remove(new Point(linha, coluna));
@@ -77,10 +86,15 @@ public class Tabuleiro {
 		return tabuleiro.get(linha, coluna);
 	}
 
+	/**
+	 * Copia todo tabuleiro que foi passado como parametro.
+	 * @param tab
+	 */
 	public void copia(Tabuleiro tab) {
-		for (Cell<Integer, Integer, String> casa : tab.getTabuleiro().cellSet()) {
-			this.tabuleiro.put(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-		}
+//		for (Cell<Integer, Integer, String> casa : tab.tabuleiro.cellSet()) {
+//			this.tabuleiro.put(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
+//		}
+		this.tabuleiro.putAll(tab.tabuleiro); //TODO ver se metodo esta correto
 		atualizarPossiveisJogadas();
 	}
 
@@ -105,7 +119,6 @@ public class Tabuleiro {
 			}
 		}
 	}
-	
 	
 	@Override
 	public String toString() {

@@ -2,7 +2,7 @@ package com.aguiarcampos.gomoku.core;
 
 
 public class GomokuJogo extends Tabuleiro{
-
+	
 	/**
 	 * indica tamanho do tabuleiro
 	 */
@@ -32,12 +32,12 @@ public class GomokuJogo extends Tabuleiro{
 	/**
 	 * indicação do jogador da rodada atual
 	 */
-	private String jogadorAtual;
+	private static String jogadorAtual;
 
 	/**
 	 * variável booleana auxiliar para determinar vencedor
 	 */
-	private boolean vencedor = false;
+	private static boolean vencedor = false;
 
 	/**
 	 * Construtor padrao
@@ -67,13 +67,17 @@ public class GomokuJogo extends Tabuleiro{
 		return VAZIO;
 	}
 
+	public Tabuleiro getTabuleiro(){
+		return this;
+	}
 	/**
 	 * Realiza jogada settando os valores
 	 * @param linha
 	 * @param coluna
 	 * @return
+	 * @throws Exception 
 	 */
-	public boolean realizarJogada(int linha, int coluna) {
+	public boolean realizarJogada(int linha, int coluna) throws Exception {
 		moverPeca(linha, coluna, jogadorAtual);
 		
 		//verifica se na jogada atual houve um vencedor
