@@ -17,7 +17,7 @@ public class IA_testeTest {
 	@Test
 	public final void testMiniM() throws Exception {
 
-		int prof = 3;
+		int prof = 6;
 		Tabuleiro tab = new Tabuleiro();
 		tab.moverPeca(0, 0, GomokuJogo.PRETA);
 		
