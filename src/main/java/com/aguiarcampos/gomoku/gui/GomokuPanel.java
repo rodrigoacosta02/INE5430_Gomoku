@@ -66,15 +66,12 @@ public class GomokuPanel extends JPanel implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if (comandoReiniciar.equals(e.getActionCommand())) {
-			state = new GomokuJogo();
-			addMouseListener(new GomokuListener());
-			repaint();
-			try {
-				c.pararJogo();
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+//			state = new GomokuJogo();
+//			addMouseListener(new GomokuListener());
+//			repaint();
+			c.run();
+			//				c.pararJogo();
+			
 		}
 		
 		if (comandoInicioComp.equals(e.getActionCommand())) {

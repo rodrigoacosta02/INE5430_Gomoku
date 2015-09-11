@@ -1,9 +1,11 @@
 package com.aguiarcampos.gomoku.core;
 
 import java.awt.Point;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import pacoteTestes.Pontuacao;
 import lombok.Getter;
 
 import com.google.common.collect.HashBasedTable;
@@ -17,7 +19,7 @@ public class Tabuleiro {
 	 * biblioteca google guava - Table<Linha, Coluna, Valor> Table que associa posição X,Y do
 	 * tabuleiro com a peça 
 	 */
-	protected Table<Integer, Integer, String> tabuleiro;
+	public Table<Integer, Integer, String> tabela;
 
 	/**
 	 * lista com as coordenadas das possiveis jogados do tabuleiro atual
@@ -30,26 +32,31 @@ public class Tabuleiro {
 	 * Construtor padrao
 	 */
 	public Tabuleiro() {
-		tabuleiro = HashBasedTable.create();
-		possiveisJogadas = new HashSet<Point>(); 
-		//inicialização da table com todas as casas vazias
-		for (int i = 0; i < GomokuJogo.tamanhoTabuleiro; i++) {
-			for (int j = 0; j < GomokuJogo.tamanhoTabuleiro; j++) {
-				tabuleiro.put(i, j, GomokuJogo.VAZIO);
-				possiveisJogadas.add(new Point(i, j));
-			}
-		}
+		tabela = HashBasedTable.create();
+		possiveisJogadas = new HashSet<Point>();
+		atualizarPossiveisJogadas();
 	}
 
 	/**
 	 * Construtor com parametro Table
-	 * @param tabuleiro
+	 * @param tabela
 	 */
-	public Tabuleiro(Table<Integer, Integer, String> tabuleiro) {
-		this.tabuleiro = HashBasedTable.create();
-		this.tabuleiro.putAll(tabuleiro);
+	public Tabuleiro(Table<Integer, Integer, String> tabela) {
+		this.tabela = HashBasedTable.create();
+		this.tabela.putAll(tabela);
 		atualizarPossiveisJogadas();
 	}
+
+	/**
+	 * TODO rever se mantem mesmo endereco!!
+	 * @param tabuleiro
+	 */
+	public Tabuleiro(Tabuleiro tabuleiro){
+		
+		this.tabela = tabuleiro.tabela;
+		this.possiveisJogadas = tabuleiro.getPossiveisJogadas();
+	}
+	
 	
 	/**
 	 * Move uma peça para qualquer local do tabuleiro
@@ -60,13 +67,18 @@ public class Tabuleiro {
 	 * @throws Exception Casa do tabuleiro ja ocupada
 	 */
 	public boolean moverPeca(int linha, int coluna, String jogador) throws Exception {
+		
 		//validacao de peça existente na casa
-		if (!this.tabuleiro.get(linha, coluna).equals(GomokuJogo.VAZIO)) {
-			throw new Exception("Casa invalida - jah possui peca");
+		if (jogador.equals(GomokuJogo.VAZIO)) {
+			throw new Exception("jogador inexistente");
+		}
+		
+		if (this.tabela.contains(linha, coluna)) {
+			throw new Exception("casa jah preenchida");
 		}
 		//colaca na Table a posição da jogada e o jogador
-		this.tabuleiro.put(linha, coluna, jogador);
-		possiveisJogadas.remove(new Point(linha, coluna));
+		this.tabela.put(linha, coluna, jogador);
+		possiveisJogadas.remove(new Point(linha, coluna));//verificar remocao
 		atualizarPontuacao();
 		return false;
 	}
@@ -83,7 +95,11 @@ public class Tabuleiro {
 	 * @return
 	 */
 	public String getValorCasa(int linha, int coluna) {
-		return tabuleiro.get(linha, coluna);
+		if (!this.tabela.contains(linha, coluna)) {
+			return GomokuJogo.VAZIO;
+		}
+		
+		return tabela.get(linha, coluna);
 	}
 
 	/**
@@ -91,10 +107,7 @@ public class Tabuleiro {
 	 * @param tab
 	 */
 	public void copia(Tabuleiro tab) {
-//		for (Cell<Integer, Integer, String> casa : tab.tabuleiro.cellSet()) {
-//			this.tabuleiro.put(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-//		}
-		this.tabuleiro.putAll(tab.tabuleiro); //TODO ver se metodo esta correto
+		this.tabela.putAll(tab.tabela); //TODO ver se metodo esta correto
 		atualizarPossiveisJogadas();
 	}
 
@@ -104,18 +117,26 @@ public class Tabuleiro {
 	 * @param coluna
 	 */
 	public void limpaCasa(int linha, int coluna) {
-		this.tabuleiro.put(linha, coluna, GomokuJogo.VAZIO);
+		this.tabela.remove(linha, coluna);
+		this.possiveisJogadas.add(new Point(linha, coluna));
 	}
 
+	private Set<Tabuleiro> remove(Set<Point> listaPossocoes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	/**
 	 * atualiza todas a variavel possiveisJogadas
 	 */
 	private void atualizarPossiveisJogadas() {
+//TODO
 		possiveisJogadas = new HashSet<Point>();
-		for (Cell<Integer, Integer, String> casa : tabuleiro.cellSet()) {
-			if (casa.getValue().equals(GomokuJogo.VAZIO)) {
-				possiveisJogadas.add(new Point(casa.getRowKey(), casa.getColumnKey()));
+		for (int linha = 0; linha < GomokuJogo.tamanhoTabuleiro; linha++) {
+			for (int coluna = 0; coluna < GomokuJogo.tamanhoTabuleiro; coluna++) {
+				if (getValorCasa(linha, coluna).equals(GomokuJogo.VAZIO)) {
+					possiveisJogadas.add(new Point(linha, coluna));
+				}
 			}
 		}
 	}
@@ -123,7 +144,7 @@ public class Tabuleiro {
 	@Override
 	public String toString() {
 		String saida = "";
-		for (Cell<Integer, Integer, String> casa: tabuleiro.cellSet()) {
+		for (Cell<Integer, Integer, String> casa: tabela.cellSet()) {
 			saida += casa.getRowKey() + ", " + casa.getColumnKey() + " " + casa.getValue() + " | ";
 			if (casa.getColumnKey() == GomokuJogo.tamanhoTabuleiro -1) {
 				saida += "\n";

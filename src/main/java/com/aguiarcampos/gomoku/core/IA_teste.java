@@ -4,9 +4,6 @@ import java.awt.Point;
 import java.util.Random;
 import java.util.Set;
 
-import com.google.common.collect.Table;
-import com.google.common.collect.TreeBasedTable;
-
 public class IA_teste {
 
 	/**
@@ -17,7 +14,7 @@ public class IA_teste {
 	/**
 	 * Representaçao da peça do Computador
 	 */
-	private String pecaComptador;
+	public static String pecaComptador;
 
 	/**
 	 * Ponto(x,y) de jogada
@@ -53,12 +50,13 @@ public class IA_teste {
 			System.out.println(jogada.x + " - " + jogada.y);
 	}
 	
+	
+	//TODO resolver problema se profundidade maior que o maximo de proximas jogadas
 	@SuppressWarnings("unused")
 	public MelhorJogada miniM(int profundidade, Tabuleiro tabuleiro, String jogadorAtual) throws Exception {
-		
 		//TODO validacao de vitoria 
-		if (false) {// vencedor do board atual
-			return null;// vencedor
+		if (tabuleiro.getPossiveisJogadas().isEmpty()) {// vencedor do board atual
+			return melhorPontuacao(tabuleiro);// vencedor
 		}
 		
 		//define se jogada eh MAX ou MIN
@@ -77,6 +75,9 @@ public class IA_teste {
 		
 		//verificacao de profundidade maxima da arvore
 		if (profundidade > 0) {
+			//criado novo tabuleiro sendo filho do atual
+			Tabuleiro novoT = new Tabuleiro();
+			novoT.copia(tabuleiro);
 			
 			//lista de possiveis jogadas do tabuleiro atual
 			Set<Point> p = tabuleiro.getPossiveisJogadas();
@@ -85,12 +86,8 @@ public class IA_teste {
 				//percorre todos os pontos de possiveis jogadas do tabuleiro atual
 				for (Point point : p) {
 					
-					//criado novo tabuleiro sendo filho do atual
-					Tabuleiro novoT = new Tabuleiro();
-					novoT.copia(tabuleiro);
+					//move peca para uma posicao vazia
 					novoT.moverPeca(point.x, point.y, proxJog);
-					
-					
 					
 					//recursao em profundidade - retornando melhorJogada
 					MelhorJogada novaJogada = miniM(profundidade - 1, novoT, proxJog);
@@ -101,21 +98,23 @@ public class IA_teste {
 						melhorJogada = novaJogada;
 					}
 					
+					//volta jogada
+					novoT.limpaCasa(point.x, point.y);
+					
+					
 					//debug
-					if (profundidade==1) {
-						System.out.println(a++);
-						System.out.println("########## PRETO - " + profundidade);
-						System.out.println(melhorJogada.pontuacao + " -< melhorValor");
-						System.out.println(point.x +", " + point.y +" = jogadas");
-					}
+//					if (profundidade==1) {
+//						System.out.println(a++);
+//						System.out.println("########## PRETO - " + profundidade);
+//						System.out.println(melhorJogada.pontuacao + " -< melhorValor");
+//						System.out.println(point.x +", " + point.y +" = jogadas");
+//					}
 				}
 
 			} else {//MIN
 
 				for (Point point : p) {
 
-					Tabuleiro novoT = new Tabuleiro();
-					novoT.copia(tabuleiro);
 					novoT.moverPeca(point.x, point.y, proxJog);
 
 					MelhorJogada novaJogada = miniM(profundidade - 1, novoT, proxJog);
@@ -125,13 +124,15 @@ public class IA_teste {
 						melhorJogada = novaJogada;
 					}
 					
-					//debug
-					if (profundidade==1) {
-						System.out.println(a++);
-						System.out.println("########## BRANCO - " + profundidade);
-						System.out.println(melhorJogada.pontuacao + " -< melhorValor");
-						System.out.println(point.x +", " + point.y +" = jogadas");
-					}
+					novoT.limpaCasa(point.x, point.y);
+					
+//					//debug
+//					if (profundidade==1) {
+//						System.out.println(a++);
+//						System.out.println("########## BRANCO - " + profundidade);
+//						System.out.println(melhorJogada.pontuacao + " -< melhorValor");
+//						System.out.println(point.x +", " + point.y +" = jogadas");
+//					}
 				}
 			}
 			return melhorJogada;
@@ -148,7 +149,10 @@ public class IA_teste {
 	 */
 	private MelhorJogada melhorPontuacao(Tabuleiro tabuleiro) {
 		// TODO Auto-generated method stub
-		return new MelhorJogada(tabuleiro.getPossiveisJogadas().iterator().next(), (int) (Math.random() * GomokuJogo.tamanhoTabuleiro));
+		RegrasPontuacao rp = new RegrasPontuacao();
+		rp.pontuacaoLinha(tabuleiro);
+		
+		return new MelhorJogada(tabuleiro.getPossiveisJogadas().iterator().next(), rp.getPontuacao());
 	}
 
 	

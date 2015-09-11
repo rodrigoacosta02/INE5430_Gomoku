@@ -6,13 +6,13 @@ public class GomokuJogo extends Tabuleiro{
 	/**
 	 * indica tamanho do tabuleiro
 	 */
-	public static final int tamanhoTabuleiro = 3;
+	public static final int tamanhoTabuleiro = 15;
 
 	/**
 	 * check que representa o numero de sequencia mínima de peças seguidas para vencer o
 	 * jogo
 	 */
-	public static final int check = 3;
+	public static final int check = 5;
 
 	/**
 	 * Representação do Jogador com a peça preta
@@ -32,7 +32,7 @@ public class GomokuJogo extends Tabuleiro{
 	/**
 	 * indicação do jogador da rodada atual
 	 */
-	private static String jogadorAtual;
+	private String jogadorAtual;
 
 	/**
 	 * variável booleana auxiliar para determinar vencedor
@@ -129,16 +129,16 @@ public class GomokuJogo extends Tabuleiro{
 	 */
 	public int verificarLinha(int linhaFixa, int coluna, String jogador) {
 		int contador = 1;
-		while (tabuleiro.containsColumn(++coluna) && contador < check) {
-			if (tabuleiro.get(linhaFixa, coluna).equals(jogador)) {
+		while (tabela.containsColumn(++coluna) && contador < check) {
+			if (getValorCasa(linhaFixa, coluna).equals(jogador)) {
 				contador++;
 			}else
 				break;
 		}
 		//retorna ao valor coluna ao seu ponto original
 		coluna -= contador;
-		while (tabuleiro.containsColumn(--coluna) && contador < check) {
-			if (tabuleiro.get(linhaFixa, coluna).equals(jogador)) {
+		while (tabela.containsColumn(--coluna) && contador < check) {
+			if (getValorCasa(linhaFixa, coluna).equals(jogador)) {
 				contador++;
 			}else
 				break;
@@ -156,16 +156,16 @@ public class GomokuJogo extends Tabuleiro{
 	public int verificarColuna(int linha, int colunaFixa, String jogador) {
 		int contador = 1;
 
-		while (tabuleiro.containsRow(++linha) && contador < check) {
-			if (tabuleiro.get(linha, colunaFixa).equals(jogador))
+		while (tabela.containsRow(++linha) && contador < check) {
+			if (getValorCasa(linha, colunaFixa).equals(jogador))
 				contador++;
 			else
 				break;
 		}
 		//retorna ao valor linha ao seu ponto original
 		linha -= contador;
-		while (tabuleiro.containsRow(--linha) && contador < check) {
-			if (tabuleiro.get(linha, colunaFixa).equals(jogador))
+		while (tabela.containsRow(--linha) && contador < check) {
+			if (getValorCasa(linha, colunaFixa).equals(jogador))
 				contador++;
 			else
 				break;
@@ -183,9 +183,9 @@ public class GomokuJogo extends Tabuleiro{
 	public int verificarDiagonalDireita(int linha, int coluna, String jogador) {
 		int contador = 1;
 
-		while (tabuleiro.containsRow(++linha)
-				& tabuleiro.containsColumn(++coluna)  && contador < check) {
-			if (tabuleiro.get(linha, coluna).equals(jogador))
+		while (tabela.containsRow(++linha)
+				& tabela.containsColumn(++coluna)  && contador < check) {
+			if (getValorCasa(linha, coluna).equals(jogador))
 				contador++;
 			else
 				break;
@@ -193,9 +193,9 @@ public class GomokuJogo extends Tabuleiro{
 		//retorna ao valor coluna e linha ao seu ponto original
 		linha -= contador;
 		coluna -= contador;
-		while (tabuleiro.containsRow(--linha)
-				&& tabuleiro.containsColumn(--coluna) && contador < check) {
-			if (tabuleiro.get(linha, coluna).equals(jogador))
+		while (tabela.containsRow(--linha)
+				&& tabela.containsColumn(--coluna) && contador < check) {
+			if (getValorCasa(linha, coluna).equals(jogador))
 				contador++;
 			else
 				break;
@@ -213,9 +213,9 @@ public class GomokuJogo extends Tabuleiro{
 	public int verificarDiagonalEsquerda(int linha, int coluna, String jogador) {
 		int contador = 1;
 
-		while (tabuleiro.containsRow(++linha)
-				& tabuleiro.containsColumn(--coluna) && contador < check) {
-			if (tabuleiro.get(linha, coluna).equals(jogador))
+		while (tabela.containsRow(++linha)
+				& tabela.containsColumn(--coluna) && contador < check) {
+			if (getValorCasa(linha, coluna).equals(jogador))
 				contador++;
 			else
 				break;
@@ -223,9 +223,9 @@ public class GomokuJogo extends Tabuleiro{
 		//retorna ao valor coluna e linha ao seu ponto original
 		linha -= contador;
 		coluna += contador;
-		while (tabuleiro.containsRow(--linha)
-				&& tabuleiro.containsColumn(++coluna) && contador < check) {
-			if (tabuleiro.get(linha, coluna).equals(jogador))
+		while (tabela.containsRow(--linha)
+				&& tabela.containsColumn(++coluna) && contador < check) {
+			if (getValorCasa(linha, coluna).equals(jogador))
 				contador++;
 			else
 				break;
