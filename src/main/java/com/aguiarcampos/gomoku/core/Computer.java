@@ -83,7 +83,7 @@ public class Computer extends IA_teste implements Runnable {
 		}
 	}
 
-	public void pararJogo() throws InterruptedException{
+	public void pararJogo(){
 		t.stop();
 	}
 	
