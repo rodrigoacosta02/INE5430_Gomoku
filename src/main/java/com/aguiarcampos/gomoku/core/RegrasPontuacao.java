@@ -1,5 +1,8 @@
 package com.aguiarcampos.gomoku.core;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import lombok.Getter;
 
 import com.google.common.collect.HashBasedTable;
@@ -10,20 +13,34 @@ public class RegrasPontuacao extends GomokuJogo {
 
 	@Getter
 	private int pontuacao = 0;
-
+	Set<PontuacaoCasa> casasPontuadasEmLinha = new HashSet<RegrasPontuacao.PontuacaoCasa>();
+	Set<PontuacaoCasa> casasPontuadasEmColuna;
+	Set<PontuacaoCasa> casasPontuadasEmDiagonalDireita;
+	Set<PontuacaoCasa> casasPontuadasEmDiagonalEsquerda;
+	
+	
 	public void pontuacaoLinha(Tabuleiro tabuleiro) {
 
 		// percorre casas preenchidas
 		for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
-			potuarLinha(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
+			casasPontuadasEmLinha.add(pontuarLinha(casa.getRowKey(), casa.getColumnKey(), casa.getValue()));
 		}
-
+		System.out.println(pontuacao);
 	}
+	
+	/**
+	 * A partir da posição da peça é percorrido a linha para verificar qntidade de peças consecutivas e casas vazias
+	 * 
+	 * @param linha
+	 * @param coluna
+	 * @param jogador
+	 */
+	protected PontuacaoCasa pontuarLinha(Integer linha, Integer coluna, String jogador) {
 
-	protected void potuarLinha(Integer linha, Integer coluna, String jogador) {
-		// TODO Auto-generated method stub
 		PontuacaoCasa pontuacaoCasa = new PontuacaoCasa(0, 1);
+		pontuacaoCasa.posicaoPecas.put(linha, coluna, jogador);
 		int verificaColuna = coluna;
+		
 		// verifica a direita
 		while ((++verificaColuna) < GomokuJogo.tamanhoTabuleiro
 				&& pontuacaoCasa.qntPecasConsecutiva < GomokuJogo.check) {
@@ -52,93 +69,68 @@ public class RegrasPontuacao extends GomokuJogo {
 		}
 
 		try {
-			atualizaPontuacao(pontuacaoCasa, jogador);
+			pontuacaoPecasConsecutivas(pontuacaoCasa);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
+			return new PontuacaoCasa(0, 0);//não é a melhor maneira de tratar isso!!TODO
 		}
+		return pontuacaoCasa;
 	}
 
-	protected void atualizaPontuacao(PontuacaoCasa pontuacaoCasa, String jogador) throws Exception {
-		// TODO Auto-generated method stub
-		int alce = 0;
+	public void pontuacaoPecasConsecutivas(PontuacaoCasa pontuacaoCasa) throws Exception{
 		
 		if ((pontuacaoCasa.qntCasasLivres + pontuacaoCasa.qntPecasConsecutiva) < GomokuJogo.check) {
 			throw new Exception (pontuacaoCasa.qntPecasConsecutiva+" sem chance de vencer por aqui " + pontuacaoCasa.qntCasasLivres); 
 		}
 		
-		for (int i = 0; i < GomokuJogo.check*2; i++) {
-			if (pontuacaoCasa.qntPecasConsecutiva > i) {
-				alce += pontuacaoCasa.qntPecasConsecutiva * 10;
-			} 
-			if (pontuacaoCasa.qntCasasLivres > i) {
-				alce += pontuacaoCasa.qntPecasConsecutiva + 50;
-			}
-			if(pontuacaoCasa.qntCasasLivres < i && pontuacaoCasa.qntPecasConsecutiva < i)
-				break;
-		}
-		
-		
-		if (jogador.equals(GomokuJogo.PRETA)) {
-			pontuacao += alce;
-		} else
-			pontuacao -= alce * 2;
-	}
-	
-	void potuacaoPecasConsecutivas(PontuacaoCasa pontuacaoCasa, String jogador) throws Exception{
-		
-		if ((pontuacaoCasa.qntCasasLivres + pontuacaoCasa.qntPecasConsecutiva) < GomokuJogo.check) {
-			throw new Exception (pontuacaoCasa.qntPecasConsecutiva+" sem chance de vencer por aqui " + pontuacaoCasa.qntCasasLivres); 
-		}
-		
-		boolean vezIA = jogador.equals(IA_teste.pecaComptador);
+		//verifica se a pontuacao é MIN ou MAX
+		boolean vezIA = pontuacaoCasa.posicaoPecas.containsValue(GomokuJogo.PRETA);
 		
 		switch (pontuacaoCasa.qntPecasConsecutiva) {
 			case 1:
 				if (vezIA) {
-					pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
+					pontuacao += pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
 					pontuacao += 1;
 				} else{
-					pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
+					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
 					pontuacao -= 10;					
 				}
 				
 				break;
 			case 2:
 				if (vezIA) {
-					pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
+					pontuacao += pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
 					pontuacao += 10;
 				} else{
-					pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
+					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
 					pontuacao -= 100;					
 				}
 				
 				break;
 			case 3:
 				if (vezIA) {
-					pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
+					pontuacao += pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
 					pontuacao += 100;
 				} else{
-					pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
+					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
 					pontuacao -= 1000;					
 				}	
 				
 				break;
 			case 4:
 				if (vezIA) {
-					pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
+					pontuacao += pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
 					pontuacao += 1000;
 				} else{
-					pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
+					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
 					pontuacao -= 10000;					
 				}	
 				
 				break;
 			case 5:
 				if (vezIA) {
-					pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
 					pontuacao = Integer.MAX_VALUE;
 				} else{
-					pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
 					pontuacao = Integer.MIN_VALUE;					
 				}	
 				break;
@@ -148,30 +140,30 @@ public class RegrasPontuacao extends GomokuJogo {
 		}
 		
 	}
-	 private int pontuacaoCasasLivresIA(int qntCasasLivre) {	
-		 for (int i = 0; i < (GomokuJogo.check * 2); i++) {
+	
+	
+	 protected int pontuacaoCasasLivresIA(int qntCasasLivre) {	
+		 int retorno = 0;
+		 for (int i = 1; i < (GomokuJogo.check * GomokuJogo.tamanhoTabuleiro); i++) {
 			if (qntCasasLivre == i) {
-				pontuacao += 10 * i;
+				retorno += (5 * i);
 			} else if (qntCasasLivre < i) {
 				break;
 			}
 		}
-		 return 0;
+		 return retorno;
 	}
 	 
-	 private int pontuacaoCasasLivresAdversario(int qntCasasLivre) {	
-			if (qntCasasLivre == 1) {
-
-			} else if (qntCasasLivre == 2) {
-				
-			} else if (qntCasasLivre == 3) {
-				
-			} else if (qntCasasLivre == 4) {
-				
-			} else if (qntCasasLivre == 5) {
-				
-			}		
-		 return 0;
+	 protected int pontuacaoCasasLivresAdversario(int qntCasasLivre) {	
+		 int retorno = 0;
+		 for (int i = 1; i < (GomokuJogo.check * GomokuJogo.tamanhoTabuleiro); i++) {
+			if (qntCasasLivre == i) {
+				retorno -= (5 * i);
+			} else if (qntCasasLivre < i) {
+				break;
+			}
+		}
+		 return retorno;
 	}
 	/**
 	 * Estrutura de representacao da pontucao
@@ -188,4 +180,5 @@ public class RegrasPontuacao extends GomokuJogo {
 			this.qntPecasConsecutiva = qntPecasConsecutiva;
 		}
 	}
+	
 }
