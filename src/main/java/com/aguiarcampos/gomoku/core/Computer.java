@@ -56,6 +56,7 @@ public class Computer extends IA_teste implements Runnable {
 	
 	public Computer(GomokuPanel gomokuPanel) {
 		//TODO somente inicializar uma vez ??
+		super();
 		this.panel = gomokuPanel;
 //		t = new Thread(this);
 //		t.start();
@@ -70,15 +71,14 @@ public class Computer extends IA_teste implements Runnable {
 	
 	private void jogar() throws Exception {
 		// TODO Auto-generated method stub
-		String jog = panel.state.getJogadorAtual().equals(GomokuJogo.BRANCA)? GomokuJogo.PRETA : GomokuJogo.BRANCA;
-		MelhorJogada mj = this.miniM(3, panel.state.getTabuleiro(), jog);
-		
+		String jog = panel.state.getJogadorAtual();
+		MelhorJogada mj = this.miniM(1, panel.state.getTabuleiro(), jog);
+
 		System.out.println("Jogo IA!");
 		System.out.println(mj.pontuacao + " - " + mj.jogada);
 		try {
 			panel.verificacaoJogada(mj.jogada.x, mj.jogada.y);
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}

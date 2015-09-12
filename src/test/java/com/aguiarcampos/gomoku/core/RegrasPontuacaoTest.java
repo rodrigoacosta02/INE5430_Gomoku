@@ -21,7 +21,7 @@ public class RegrasPontuacaoTest {
 
 	@Before
 	public void setUp() throws Exception {
-		rp = new RegrasPontuacao();
+		rp = new RegrasPontuacao(null);
 		pc = new PontuacaoCasa(3, 2);
 		casasSequenciaisEmLinha = HashBasedTable.create();
 		casasSequenciaisEmLinha.put(1, 0, GomokuJogo.PRETA);
@@ -65,7 +65,7 @@ public class RegrasPontuacaoTest {
 		rp.pontuacaoPecasConsecutivas(pc);
 		assertEquals(25, rp.getPontuacao());
 
-		rp = new RegrasPontuacao();
+		rp = new RegrasPontuacao(null);
 		casasSequenciaisEmLinha.put(1, 0, GomokuJogo.BRANCA);
 		casasSequenciaisEmLinha.put(1, 1, GomokuJogo.BRANCA);
 		pc.posicaoPecas.clear();

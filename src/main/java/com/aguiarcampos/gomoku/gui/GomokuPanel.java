@@ -19,8 +19,11 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import pacoteTestes.Pontuacao;
+
 import com.aguiarcampos.gomoku.core.Computer;
 import com.aguiarcampos.gomoku.core.GomokuJogo;
+import com.aguiarcampos.gomoku.core.RegrasPontuacao;
 
 
 /**
@@ -69,7 +72,7 @@ public class GomokuPanel extends JPanel implements ActionListener {
 			state = new GomokuJogo();
 			addMouseListener(new GomokuListener());
 			repaint();
-			c.pararJogo();
+//			c.pararJogo();
 			
 		}
 		

@@ -23,7 +23,7 @@ public class IA_teste {
 
 
 	public IA_teste() {
-		super();
+		this.jogada = new Point();
 	}
 
 	/**
@@ -32,9 +32,9 @@ public class IA_teste {
 	 * @param pecaComptador
 	 */
 	public IA_teste(GomokuJogo gomokuJogo, String pecaComptador) {
+		this();
 		this.gomokuJogo = gomokuJogo;
 		this.pecaComptador = pecaComptador;
-		this.jogada = new Point();
 	}
 	
 	/**
@@ -55,8 +55,8 @@ public class IA_teste {
 	@SuppressWarnings("unused")
 	public MelhorJogada miniM(int profundidade, Tabuleiro tabuleiro, String jogadorAtual) throws Exception {
 		//TODO validacao de vitoria 
-		if (tabuleiro.getPossiveisJogadas().isEmpty()) {// vencedor do board atual
-			return melhorPontuacao(tabuleiro);// vencedor
+		if (tabuleiro.isFimJogo()) {// vencedor do board atual
+			return melhorPontuacao(tabuleiro, jogadorAtual);// vencedor
 		}
 		
 		//define se jogada eh MAX ou MIN
@@ -70,11 +70,9 @@ public class IA_teste {
 		Point melhorPosicaoPeca = null; 
 		MelhorJogada melhorJogada = new MelhorJogada(melhorPosicaoPeca, melhorValor);
 
-		//debug aux
-		int a = 0;
-		
 		//verificacao de profundidade maxima da arvore
 		if (profundidade > 0) {
+			
 			//criado novo tabuleiro sendo filho do atual
 			Tabuleiro novoT = new Tabuleiro();
 			novoT.copia(tabuleiro);
@@ -100,15 +98,6 @@ public class IA_teste {
 					
 					//volta jogada
 					novoT.limpaCasa(point.x, point.y);
-					
-					
-					//debug
-//					if (profundidade==1) {
-//						System.out.println(a++);
-//						System.out.println("########## PRETO - " + profundidade);
-//						System.out.println(melhorJogada.pontuacao + " -< melhorValor");
-//						System.out.println(point.x +", " + point.y +" = jogadas");
-//					}
 				}
 
 			} else {//MIN
@@ -125,20 +114,12 @@ public class IA_teste {
 					}
 					
 					novoT.limpaCasa(point.x, point.y);
-					
-//					//debug
-//					if (profundidade==1) {
-//						System.out.println(a++);
-//						System.out.println("########## BRANCO - " + profundidade);
-//						System.out.println(melhorJogada.pontuacao + " -< melhorValor");
-//						System.out.println(point.x +", " + point.y +" = jogadas");
-//					}
 				}
 			}
 			return melhorJogada;
 			
 		} else {
-			return melhorPontuacao(tabuleiro);
+			return melhorPontuacao(tabuleiro, jogadorAtual);
 		}
 	}
 	
@@ -147,12 +128,31 @@ public class IA_teste {
 	 * @param tabuleiro
 	 * @return
 	 */
-	private MelhorJogada melhorPontuacao(Tabuleiro tabuleiro) {
-		// TODO Auto-generated method stub
-		RegrasPontuacao rp = new RegrasPontuacao();
-		rp.pontuacaoLinha(tabuleiro);
+	protected MelhorJogada melhorPontuacao(Tabuleiro tabuleiro, String jogador) {
+
+		MelhorJogada melhorJogada = new MelhorJogada(new Point(), Integer.MIN_VALUE);
+		MelhorJogada novaJogada ;
+		Tabuleiro novoT = new Tabuleiro();
+		novoT.copia(tabuleiro);
+		Set<Point> p = novoT.getPossiveisJogadas();
+		for (Point jogada : p) {
+			try {
+				novoT.moverPeca(jogada.x, jogada.y, jogador);
+				RegrasPontuacao rp = new RegrasPontuacao(novoT);
+				rp.pontuacaoLinha(novoT);
+				novaJogada = new MelhorJogada(jogada, rp.getPontuacao());
+				
+				if (!melhorJogada.potuacaoAtualMaiorQueNovaJogada(novaJogada)) {
+					melhorJogada = novaJogada;
+				}
+				
+				novoT.limpaCasa(jogada.x, jogada.y);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		
-		return new MelhorJogada(tabuleiro.getPossiveisJogadas().iterator().next(), rp.getPontuacao());
+		return melhorJogada;
 	}
 
 	

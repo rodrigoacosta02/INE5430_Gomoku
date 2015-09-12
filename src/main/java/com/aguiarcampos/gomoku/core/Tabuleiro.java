@@ -1,12 +1,11 @@
 package com.aguiarcampos.gomoku.core;
 
 import java.awt.Point;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import pacoteTestes.Pontuacao;
 import lombok.Getter;
+import lombok.Setter;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -27,13 +26,26 @@ public class Tabuleiro {
 	@Getter
 	private Set<Point> possiveisJogadas;
 	
+	@Getter
+	private Set<Tabuleiro> possiveisJogadasTabuleiro;
+	
+	@Getter
+	@Setter
+	private int notaTabuleiro;
+	
+	@Getter
+	@Setter
+	private boolean fimJogo;
 	
 	/**
 	 * Construtor padrao
 	 */
 	public Tabuleiro() {
+		fimJogo = false;
+		notaTabuleiro = 0;
 		tabela = HashBasedTable.create();
 		possiveisJogadas = new HashSet<Point>();
+		possiveisJogadasTabuleiro = new HashSet<Tabuleiro>();
 		atualizarPossiveisJogadas();
 	}
 
@@ -42,7 +54,7 @@ public class Tabuleiro {
 	 * @param tabela
 	 */
 	public Tabuleiro(Table<Integer, Integer, String> tabela) {
-		this.tabela = HashBasedTable.create();
+		this();
 		this.tabela.putAll(tabela);
 		atualizarPossiveisJogadas();
 	}
@@ -52,11 +64,10 @@ public class Tabuleiro {
 	 * @param tabuleiro
 	 */
 	public Tabuleiro(Tabuleiro tabuleiro){
-		
-		this.tabela = tabuleiro.tabela;
-		this.possiveisJogadas = tabuleiro.getPossiveisJogadas();
+		this();
+		copia(tabuleiro);
 	}
-	
+
 	
 	/**
 	 * Move uma peça para qualquer local do tabuleiro
@@ -78,14 +89,13 @@ public class Tabuleiro {
 		}
 		//colaca na Table a posição da jogada e o jogador
 		this.tabela.put(linha, coluna, jogador);
-		possiveisJogadas.remove(new Point(linha, coluna));//verificar remocao
+		atualizarPossiveisJogadas();
 		atualizarPontuacao();
 		return false;
 	}
 
 	private void atualizarPontuacao() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -130,17 +140,25 @@ public class Tabuleiro {
 	 * atualiza todas a variavel possiveisJogadas
 	 */
 	private void atualizarPossiveisJogadas() {
-//TODO
 		possiveisJogadas = new HashSet<Point>();
 		for (int linha = 0; linha < GomokuJogo.tamanhoTabuleiro; linha++) {
 			for (int coluna = 0; coluna < GomokuJogo.tamanhoTabuleiro; coluna++) {
-				if (getValorCasa(linha, coluna).equals(GomokuJogo.VAZIO)) {
+				if (!tabela.contains(linha, coluna)) {
 					possiveisJogadas.add(new Point(linha, coluna));
 				}
 			}
 		}
 	}
 	
+
+	/**
+	 * atualiza todas a variavel possiveisJogadas
+	 */
+	private void atualizarPossiveisJogadasNoTabuleiro() {
+		for (Point point : possiveisJogadas) {
+			
+		}
+	}
 	@Override
 	public String toString() {
 		String saida = "";

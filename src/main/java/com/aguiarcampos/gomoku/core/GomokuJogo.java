@@ -82,6 +82,7 @@ public class GomokuJogo extends Tabuleiro{
 		
 		//verifica se na jogada atual houve um vencedor
 		vencedor = verificarJogada(linha, coluna, jogadorAtual);
+		this.setFimJogo(vencedor);
 		
 		//se não existir vencedor muda de jogador
 		if (!vencedor) {

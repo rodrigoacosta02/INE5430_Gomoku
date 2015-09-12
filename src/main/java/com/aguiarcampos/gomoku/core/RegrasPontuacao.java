@@ -9,7 +9,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
 
-public class RegrasPontuacao extends GomokuJogo {
+public class RegrasPontuacao {
 
 	@Getter
 	private int pontuacao = 0;
@@ -17,7 +17,12 @@ public class RegrasPontuacao extends GomokuJogo {
 	Set<PontuacaoCasa> casasPontuadasEmColuna;
 	Set<PontuacaoCasa> casasPontuadasEmDiagonalDireita;
 	Set<PontuacaoCasa> casasPontuadasEmDiagonalEsquerda;
+
+	Tabuleiro tabuleiro;
 	
+	public RegrasPontuacao(Tabuleiro tabuleiro) {
+		this.tabuleiro = tabuleiro;
+	}
 	
 	public void pontuacaoLinha(Tabuleiro tabuleiro) {
 
@@ -44,10 +49,10 @@ public class RegrasPontuacao extends GomokuJogo {
 		// verifica a direita
 		while ((++verificaColuna) < GomokuJogo.tamanhoTabuleiro
 				&& pontuacaoCasa.qntPecasConsecutiva < GomokuJogo.check) {
-			if (getValorCasa(linha, coluna).equals(jogador)) {
+			if (this.tabuleiro.getValorCasa(linha, coluna).equals(jogador)) {
 				pontuacaoCasa.qntPecasConsecutiva++;
 				pontuacaoCasa.posicaoPecas.put(linha, verificaColuna, jogador);
-			} else if (getValorCasa(linha, coluna).equals(GomokuJogo.VAZIO)) {
+			} else if (this.tabuleiro.getValorCasa(linha, coluna).equals(GomokuJogo.VAZIO)) {
 				pontuacaoCasa.qntCasasLivres++;
 				continue;
 			} else{
@@ -58,10 +63,10 @@ public class RegrasPontuacao extends GomokuJogo {
 
 		// verifica a esquerda
 		while ((--verificaColuna) > -1 && pontuacaoCasa.qntPecasConsecutiva < GomokuJogo.check) {
-			if (getValorCasa(linha, coluna).equals(jogador)) {
+			if (this.tabuleiro.getValorCasa(linha, coluna).equals(jogador)) {
 				pontuacaoCasa.qntPecasConsecutiva++;
 				pontuacaoCasa.posicaoPecas.put(linha, verificaColuna, jogador);
-			} else if (getValorCasa(linha, coluna).equals(GomokuJogo.VAZIO)) {
+			} else if (this.tabuleiro.getValorCasa(linha, coluna).equals(GomokuJogo.VAZIO)) {
 				pontuacaoCasa.qntCasasLivres++;
 				continue;
 			} else
@@ -165,6 +170,7 @@ public class RegrasPontuacao extends GomokuJogo {
 		}
 		 return retorno;
 	}
+
 	/**
 	 * Estrutura de representacao da pontucao
 	 */
