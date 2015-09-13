@@ -8,13 +8,13 @@ public class GomokuJogo extends Tabuleiro{
 	/**
 	 * indica tamanho do tabuleiro
 	 */
-	public static final int tamanhoTabuleiro = 5;
+	public static final int tamanhoTabuleiro = 15;
 
 	/**
 	 * check que representa o numero de sequencia mínima de peças seguidas para vencer o
 	 * jogo
 	 */
-	public static final int check = 3;
+	public static final int check = 5;
 
 	/**
 	 * Representação do Jogador com a peça preta
