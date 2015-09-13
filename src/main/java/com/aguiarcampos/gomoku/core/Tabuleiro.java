@@ -3,6 +3,7 @@ package com.aguiarcampos.gomoku.core;
 import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import lombok.Setter;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
+import com.google.common.collect.TreeBasedTable;
 
 
 public class Tabuleiro {
@@ -62,9 +64,9 @@ public class Tabuleiro {
 	public Tabuleiro() {
 		fimJogo = false;
 		notaTabuleiro = 0;
-		tabela = HashBasedTable.create();
+		tabela = TreeBasedTable.create();
 		possiveisJogadasTabuleiro = new  HashSet<Tabuleiro>();
-		possiveisJogadas = new HashSet<Point>();
+		possiveisJogadas = new TreeSet<Point>();
 		atualizarPossiveisJogadas();
 	}
 
@@ -155,15 +157,54 @@ public class Tabuleiro {
 	/**
 	 * atualiza todas a variavel possiveisJogadas
 	 */
-	private void atualizarPossiveisJogadas() {
+	protected void atualizarPossiveisJogadas() {
 		possiveisJogadas = new HashSet<Point>();
-		for (int linha = 0; linha < GomokuJogo.tamanhoTabuleiro; linha++) {
-			for (int coluna = 0; coluna < GomokuJogo.tamanhoTabuleiro; coluna++) {
+		int []linhaInicial = linha();
+		int []colunaInicial = coluna();
+		for (int linha = linhaInicial[0]; linha < linhaInicial[1]; linha++) {
+			for (int coluna = colunaInicial[0]; coluna < colunaInicial[1]; coluna++) {
 				if (!tabela.contains(linha, coluna)) {
 					possiveisJogadas.add(new Point(linha, coluna));
 				}
 			}
 		}
+	}
+
+	protected int[] linha(){
+		int [] valor = new int[2];
+		valor[0] = GomokuJogo.tamanhoTabuleiro;
+		valor[1] = 0;
+		for (Integer pointX : tabela.rowKeySet()) {
+			if (pointX.intValue() < valor[0]) {
+				valor[0] = pointX.intValue();
+			}
+			if (pointX.intValue() > valor[1]) {
+				valor[1] = pointX.intValue();
+			}
+		}
+		
+		System.out.println(" -P " + valor[0]);
+		valor[0] = ((valor[0] - GomokuJogo.check) < 0 || valor[0] == GomokuJogo.tamanhoTabuleiro) ? 0: (valor[0] - GomokuJogo.check);
+		valor[1] = ((valor[1] + GomokuJogo.check) > GomokuJogo.tamanhoTabuleiro || valor[1] == 0)? GomokuJogo.tamanhoTabuleiro : (valor[1] + GomokuJogo.check);;
+		
+		return valor;
+	}
+	protected int[] coluna(){
+		int [] valor = new int[2];
+		valor[0] = GomokuJogo.tamanhoTabuleiro;
+		valor[1] = 0;
+		for (Integer pointY : tabela.columnKeySet()) {
+			if (pointY.intValue() < valor[0]) {
+				valor[0] = pointY.intValue();
+			}
+			if (pointY.intValue() > valor[1]) {
+				valor[1] = pointY.intValue();
+			}
+		}
+		valor[0] = ((valor[0] - GomokuJogo.check) < 0 || valor[0] == GomokuJogo.tamanhoTabuleiro) ? 0: (valor[0] - GomokuJogo.check);
+		valor[1] = ((valor[1] + GomokuJogo.check) > GomokuJogo.tamanhoTabuleiro || valor[1] == 0)? GomokuJogo.tamanhoTabuleiro : (valor[1] + GomokuJogo.check);;
+		
+		return valor;
 	}
 	
 	protected void atualizaProximaJogadaPossivel(String jogador) {
@@ -174,6 +215,7 @@ public class Tabuleiro {
 			Tabuleiro tab = new Tabuleiro(aux);
 			tab.x = point.x;
 			tab.y = point.y;
+			tab.jogadorAtual = jogador;
 			this.possiveisJogadasTabuleiro.add(tab);
 			aux.remove(point.x, point.y);
 		}
@@ -186,7 +228,7 @@ public class Tabuleiro {
 			saida += casa.getRowKey() + ", " + casa.getColumnKey() + " " + casa.getValue() + " | ";
 			saida += "\n";
 		}
-		saida += " - "+getNotaTabuleiro();
+		saida += "Nota "+getNotaTabuleiro() + "\n#####";
 		return saida ;
 	}
 	
