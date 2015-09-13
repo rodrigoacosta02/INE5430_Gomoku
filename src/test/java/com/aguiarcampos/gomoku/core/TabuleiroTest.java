@@ -84,7 +84,7 @@ public class TabuleiroTest {
 		assertEquals(2+GomokuJogo.check, linha[1]);
 
 		assertEquals(0, coluna[0]);
-		assertEquals(3+GomokuJogo.check, coluna[1]);
+		assertEquals(3	+GomokuJogo.check, coluna[1]);
 		
 		
 		

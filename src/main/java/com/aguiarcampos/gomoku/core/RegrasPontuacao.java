@@ -24,11 +24,22 @@ public class RegrasPontuacao {
 		this.tabuleiro = tabuleiro;
 	}
 	
+	public boolean verificaVencedor(Tabuleiro tabuleiro){
+		GomokuJogo gj = new GomokuJogo();
+		gj.tabela.putAll(tabuleiro.tabela);
+		for (Cell<Integer, Integer, String> casa : gj.tabela.cellSet()) {
+			if (gj.verificarJogada(casa.getRowKey(), casa.getColumnKey(), casa.getValue())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * percorre tabuleiro 
 	 * @param tabuleiro
 	 */
-	public void pontuacao(Tabuleiro tabuleiro) {
+	public void pontuacao() {
 
 		// percorre casas preenchidas
 		for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
@@ -101,17 +112,17 @@ public class RegrasPontuacao {
 			case 2:
 				if (vezIA) {
 					pontuacao += pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
-					pontuacao += 10;
+					pontuacao += 100;
 				} else{
 					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
-					pontuacao -= 100;					
+					pontuacao -= 300;					
 				}
 				
 				break;
 			case 3:
 				if (vezIA) {
 					pontuacao += pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
-					pontuacao += 100;
+					pontuacao += 200;
 				} else{
 					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
 					pontuacao -= 1000;					
@@ -121,10 +132,10 @@ public class RegrasPontuacao {
 			case 4:
 				if (vezIA) {
 					pontuacao += pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
-					pontuacao += 1000;
+					pontuacao += 400;
 				} else{
 					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
-					pontuacao -= 10000;					
+					pontuacao -= 1500;					
 				}	
 				
 				break;
@@ -195,6 +206,9 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(linha, verificaColuna, jogador);
 				} else if (this.tabuleiro.getValorCasa(linha, verificaColuna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
+					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+						break;
+					} 
 					continue;
 				} else{
 					break;
@@ -209,6 +223,9 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(linha, verificaColuna, jogador);
 				} else if (this.tabuleiro.getValorCasa(linha, verificaColuna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
+					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+						break;
+					} 
 					continue;
 				} else
 					break;
@@ -237,6 +254,9 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(verificaLinha, coluna, jogador);
 				} else if (this.tabuleiro.getValorCasa(verificaLinha, coluna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
+					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+						break;
+					} 
 					continue;
 				} else{
 					break;
@@ -251,6 +271,9 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(verificaLinha, coluna, jogador);
 				} else if (this.tabuleiro.getValorCasa(verificaLinha, coluna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
+					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+						break;
+					} 
 					continue;
 				} else
 					break;
@@ -260,7 +283,7 @@ public class RegrasPontuacao {
 		}
 		
 		/**
-		 * A partir da posição da peça é percorrido a diagonal direita ("/") para verificar qntidade de peças consecutivas e casas vazias
+		 * A partir da posição da peça é percorrido a diagonal direita ("\") para verificar qntidade de peças consecutivas e casas vazias
 		 * 
 		 * @param linha
 		 * @param coluna
@@ -281,6 +304,9 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(verificaLinha, verificaColuna, jogador);
 				} else if (this.tabuleiro.getValorCasa(verificaLinha, verificaColuna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
+					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+						break;
+					} 
 					continue;
 				} else{
 					break;
@@ -296,6 +322,9 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(verificaLinha, verificaColuna, jogador);
 				} else if (this.tabuleiro.getValorCasa(verificaLinha, verificaColuna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
+					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+						break;
+					} 
 					continue;
 				} else
 					break;
@@ -305,7 +334,7 @@ public class RegrasPontuacao {
 		
 		
 		/**
-		 * A partir da posição da peça é percorrido a diagonla esquerda ("\") para verificar qntidade de peças consecutivas e casas vazias
+		 * A partir da posição da peça é percorrido a diagonla esquerda ("/") para verificar qntidade de peças consecutivas e casas vazias
 		 * 
 		 * @param linha
 		 * @param coluna
@@ -326,6 +355,9 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(verificaLinha, verificaColuna, jogador);
 				} else if (this.tabuleiro.getValorCasa(verificaLinha, verificaColuna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
+					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+						break;
+					} 
 					continue;
 				} else{
 					break;
@@ -341,6 +373,9 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(verificaLinha, verificaColuna, jogador);
 				} else if (this.tabuleiro.getValorCasa(verificaLinha, verificaColuna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
+					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+						break;
+					} 
 					continue;
 				} else
 					break;

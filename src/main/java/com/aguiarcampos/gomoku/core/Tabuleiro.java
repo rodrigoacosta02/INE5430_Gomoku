@@ -44,7 +44,6 @@ public class Tabuleiro {
 	@Setter
 	private int notaTabuleiro;
 	
-	@Getter
 	@Setter
 	private boolean fimJogo;
 	
@@ -64,10 +63,9 @@ public class Tabuleiro {
 	public Tabuleiro() {
 		fimJogo = false;
 		notaTabuleiro = 0;
-		tabela = TreeBasedTable.create();
+		tabela = HashBasedTable.create();
 		possiveisJogadasTabuleiro = new  HashSet<Tabuleiro>();
-		possiveisJogadas = new TreeSet<Point>();
-		atualizarPossiveisJogadas();
+		possiveisJogadas = new HashSet<Point>();
 	}
 
 	/**
@@ -77,7 +75,6 @@ public class Tabuleiro {
 	public Tabuleiro(Table<Integer, Integer, String> tabela) {
 		this();
 		this.tabela.putAll(tabela);
-		atualizarPossiveisJogadas();
 	}
 
 	/**
@@ -89,6 +86,10 @@ public class Tabuleiro {
 		copia(tabuleiro);
 	}
 
+	public boolean isFimJogo(){
+		RegrasPontuacao rp = new RegrasPontuacao(this);
+		return rp.verificaVencedor(this);
+	}
 	
 	/**
 	 * Move uma peça para qualquer local do tabuleiro
@@ -111,14 +112,14 @@ public class Tabuleiro {
 		//colaca na Table a posição da jogada e o jogador
 		this.tabela.put(linha, coluna, jogador);
 		possiveisJogadas.remove(new Point(linha, coluna));
-		atualizarPontuacao();
+//		atualizarPontuacao();
 		return false;
 	}
 
 	public void atualizarPontuacao() {
 		// TODO Auto-generated method stub
 		RegrasPontuacao rp = new RegrasPontuacao(this);
-		rp.pontuacao(this);
+		rp.pontuacao();
 		this.notaTabuleiro = rp.getPontuacao();
 	}
 
@@ -141,7 +142,7 @@ public class Tabuleiro {
 	 */
 	public void copia(Tabuleiro tab) {
 		this.tabela.putAll(tab.tabela); //TODO ver se metodo esta correto
-		atualizarPossiveisJogadas();
+//		atualizarPossiveisJogadas();
 	}
 
 	/**
@@ -158,7 +159,7 @@ public class Tabuleiro {
 	 * atualiza todas a variavel possiveisJogadas
 	 */
 	protected void atualizarPossiveisJogadas() {
-		possiveisJogadas = new HashSet<Point>();
+		possiveisJogadas.removeAll(possiveisJogadas);
 		int []linhaInicial = linha();
 		int []colunaInicial = coluna();
 		for (int linha = linhaInicial[0]; linha < linhaInicial[1]; linha++) {
@@ -184,8 +185,8 @@ public class Tabuleiro {
 		}
 		
 		System.out.println(" -P " + valor[0]);
-		valor[0] = ((valor[0] - GomokuJogo.check) < 0 || valor[0] == GomokuJogo.tamanhoTabuleiro) ? 0: (valor[0] - GomokuJogo.check);
-		valor[1] = ((valor[1] + GomokuJogo.check) > GomokuJogo.tamanhoTabuleiro || valor[1] == 0)? GomokuJogo.tamanhoTabuleiro : (valor[1] + GomokuJogo.check);;
+		valor[0] = ((valor[0] - 2) < 0 || valor[0] == GomokuJogo.tamanhoTabuleiro) ? 0: (valor[0] - 2);
+		valor[1] = ((valor[1] + 2) > GomokuJogo.tamanhoTabuleiro || valor[1] == 0)? GomokuJogo.tamanhoTabuleiro : (valor[1] + 2);;
 		
 		return valor;
 	}
@@ -201,23 +202,33 @@ public class Tabuleiro {
 				valor[1] = pointY.intValue();
 			}
 		}
-		valor[0] = ((valor[0] - GomokuJogo.check) < 0 || valor[0] == GomokuJogo.tamanhoTabuleiro) ? 0: (valor[0] - GomokuJogo.check);
-		valor[1] = ((valor[1] + GomokuJogo.check) > GomokuJogo.tamanhoTabuleiro || valor[1] == 0)? GomokuJogo.tamanhoTabuleiro : (valor[1] + GomokuJogo.check);;
+		valor[0] = ((valor[0] - 2) < 0 || valor[0] == GomokuJogo.tamanhoTabuleiro) ? 0: (valor[0] - 2);
+		valor[1] = ((valor[1] + 2) > GomokuJogo.tamanhoTabuleiro || valor[1] == 0)? GomokuJogo.tamanhoTabuleiro : (valor[1] + 2);;
 		
 		return valor;
 	}
 	
 	protected void atualizaProximaJogadaPossivel(String jogador) {
-		this.possiveisJogadasTabuleiro = new HashSet<Tabuleiro>();
+//		this.atualizarPossiveisJogadas();
+		this.possiveisJogadas.removeAll(possiveisJogadas);
+		this.possiveisJogadasTabuleiro.removeAll(possiveisJogadasTabuleiro);
 		Table<Integer, Integer, String> aux = HashBasedTable.create(tabela);
-		for (Point point : possiveisJogadas) {
-			aux.put(point.x, point.y, jogador);
-			Tabuleiro tab = new Tabuleiro(aux);
-			tab.x = point.x;
-			tab.y = point.y;
-			tab.jogadorAtual = jogador;
-			this.possiveisJogadasTabuleiro.add(tab);
-			aux.remove(point.x, point.y);
+		int []linhaInicial = linha();
+		int []colunaInicial = coluna();
+
+		for (int linha = linhaInicial[0]; linha < linhaInicial[1]; linha++) {
+			for (int coluna = colunaInicial[0]; coluna < colunaInicial[1]; coluna++) {
+				if (!tabela.contains(linha, coluna)) {
+					possiveisJogadas.add(new Point(linha, coluna));
+					aux.put(linha, coluna, jogador);
+					Tabuleiro tab = new Tabuleiro(aux);
+					tab.x = linha;
+					tab.y = coluna;
+					tab.jogadorAtual = jogador;
+					this.possiveisJogadasTabuleiro.add(tab);
+					aux.remove(linha, coluna);
+				}
+			}
 		}
 	}
 
@@ -225,8 +236,7 @@ public class Tabuleiro {
 	public String toString() {
 		String saida = "";
 		for (Cell<Integer, Integer, String> casa: tabela.cellSet()) {
-			saida += casa.getRowKey() + ", " + casa.getColumnKey() + " " + casa.getValue() + " | ";
-			saida += "\n";
+			saida +="("+casa.getRowKey() + ", " + casa.getColumnKey() + ") " + casa.getValue() + " | ";
 		}
 		saida += "Nota "+getNotaTabuleiro() + "\n#####";
 		return saida ;

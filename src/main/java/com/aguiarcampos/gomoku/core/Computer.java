@@ -13,7 +13,7 @@ public class Computer extends IA_teste {
 	public void jogar() throws Exception {
 		// TODO Auto-generated method stub
 		String jog = panel.state.getJogadorAtual();
-		Tabuleiro mj = this.melhorPontuacao(2, panel.state.getTabuleiro(), jog);
+		Tabuleiro mj = this.melhorPontuacao(3, panel.state.getTabuleiro(), jog);
 		mj.jogadorAtual = jog;
 		System.out.println("Jogo IA!");
 		System.out.println(mj.getNotaTabuleiro() + " - " );
