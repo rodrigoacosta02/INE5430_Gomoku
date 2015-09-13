@@ -30,25 +30,26 @@ public class RegrasPontuacaoTest {
 		pc.posicaoPecas.putAll(casasSequenciaisEmLinha);
 	}
 
-	@Test
-	public final void testPontuacaoCasasAdversario() throws Exception {
-		for (int casasLivres = 0; casasLivres < GomokuJogo.check; casasLivres++) {
-			assertEquals(casasLivres * (-5),
-					rp.pontuacaoCasasLivresAdversario(casasLivres));
-		}
-	}
-
-	@Test
-	public final void testPontuacaoCasasLivresIA() throws Exception {
-		for (int casasLivres = 0; casasLivres < GomokuJogo.check; casasLivres++) {
-			assertEquals(casasLivres * 5,
-					rp.pontuacaoCasasLivresIA(casasLivres));
-		}
-	}
+//	@Test
+//	public final void testPontuacaoCasasAdversario() throws Exception {
+//		for (int casasLivres = 0; casasLivres < GomokuJogo.check; casasLivres++) {
+//			assertEquals(casasLivres * (-5),
+//					rp.pontuacaoCasasLivresAdversario(casasLivres));
+//		}
+//	}
+//
+//	@Test
+//	public final void testPontuacaoCasasLivresIA() throws Exception {
+//		for (int casasLivres = 0; casasLivres < GomokuJogo.check; casasLivres++) {
+//			assertEquals(casasLivres * 5,
+//					rp.pontuacaoCasasLivresIA(casasLivres));
+//		}
+//	}
 
 	@Test(expected = Exception.class)
 	public final void testPontuacaoPecasConsecutivasException()
 			throws Exception {
+		System.out.println(Integer.MAX_VALUE + 1);
 		pc = new PontuacaoCasa(GomokuJogo.check / 2, GomokuJogo.check / 2);
 		rp.pontuacaoPecasConsecutivas(pc);
 	}

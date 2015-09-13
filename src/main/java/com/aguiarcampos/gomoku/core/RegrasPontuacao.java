@@ -1,7 +1,10 @@
 package com.aguiarcampos.gomoku.core;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.swing.JOptionPane;
 
 import lombok.Getter;
 
@@ -13,10 +16,15 @@ public class RegrasPontuacao {
 
 	@Getter
 	private int pontuacao = 0;
-	private Set<PontuacaoCasa> casasPontuadasEmLinha = new HashSet<RegrasPontuacao.PontuacaoCasa>();
-	private Set<PontuacaoCasa> casasPontuadasEmColuna = new HashSet<RegrasPontuacao.PontuacaoCasa>();
-	private Set<PontuacaoCasa> casasPontuadasEmDiagonalDireita = new HashSet<RegrasPontuacao.PontuacaoCasa>();
-	private Set<PontuacaoCasa> casasPontuadasEmDiagonalEsquerda = new HashSet<RegrasPontuacao.PontuacaoCasa>();
+	private Set<PontuacaoCasa> pontuadasEmLinha = new HashSet<RegrasPontuacao.PontuacaoCasa>();
+	private Set<PontuacaoCasa> pontuadasEmColuna = new HashSet<RegrasPontuacao.PontuacaoCasa>();
+	private Set<PontuacaoCasa> pontuadasEmDiagonalDireita = new HashSet<RegrasPontuacao.PontuacaoCasa>();
+	private Set<PontuacaoCasa> pontuadasEmDiagonalEsquerda = new HashSet<RegrasPontuacao.PontuacaoCasa>();
+
+	private Set<Cell<Integer, Integer, String>> casasPontuadasEmLinha = new HashSet<Cell<Integer,Integer,String>>();
+	private Set<Cell<Integer, Integer, String>> casasPontuadasEmColuna = new HashSet<Cell<Integer, Integer, String>>();
+	private Set<Cell<Integer, Integer, String>> casasPontuadasEmDiagonalDireita = new HashSet<Cell<Integer, Integer, String>>();
+	private Set<Cell<Integer, Integer, String>> casasPontuadasEmDiagonalEsquerda = new HashSet<Cell<Integer, Integer, String>>();
 
 	private Tabuleiro tabuleiro;
 	
@@ -42,39 +50,65 @@ public class RegrasPontuacao {
 	public void pontuacao() {
 
 		// percorre casas preenchidas
-		for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
-			casasPontuadasEmLinha.add(pontuarLinha(casa.getRowKey(), casa.getColumnKey(), casa.getValue()));
-			casasPontuadasEmColuna.add(pontuarColuna(casa.getRowKey(), casa.getColumnKey(), casa.getValue()));
-			casasPontuadasEmDiagonalDireita.add(pontuarDiagonalDireita(casa.getRowKey(), casa.getColumnKey(), casa.getValue()));
-			casasPontuadasEmDiagonalEsquerda.add(pontuarDiagonalEsquerda(casa.getRowKey(), casa.getColumnKey(), casa.getValue()));
-		}
+				for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
+					pontuadasEmLinha.add(pontuarLinha(casa.getRowKey(), casa.getColumnKey(), casa.getValue()));
+					pontuadasEmColuna.add(pontuarColuna(casa.getRowKey(), casa.getColumnKey(), casa.getValue()));
+					pontuadasEmDiagonalDireita.add(pontuarDiagonalDireita(casa.getRowKey(), casa.getColumnKey(), casa.getValue()));
+					pontuadasEmDiagonalEsquerda.add(pontuarDiagonalEsquerda(casa.getRowKey(), casa.getColumnKey(), casa.getValue()));
+				}
+//		// percorre casas preenchidas
+//		for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
+//			if (!casasPontuadasEmLinha.contains(casa)) {
+//				PontuacaoCasa pc = pontuarLinha(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
+//				pontuadasEmLinha.add(pc);
+//				casasPontuadasEmLinha.addAll(pc.posicaoPecas.cellSet());
+//			}
+//			
+//			if (!casasPontuadasEmColuna.contains(casa)) {
+//				PontuacaoCasa pc = pontuarColuna(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
+//				pontuadasEmColuna.add(pc);
+//				casasPontuadasEmColuna.addAll(pc.posicaoPecas.cellSet());
+//			}
+//			
+//			if (!casasPontuadasEmDiagonalDireita.contains(casa)) {
+//				PontuacaoCasa pc = pontuarDiagonalDireita(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
+//				pontuadasEmDiagonalDireita.add(pc);
+//				casasPontuadasEmDiagonalDireita.addAll(pc.posicaoPecas.cellSet());
+//			}
+//			
+//			if (!casasPontuadasEmDiagonalEsquerda.contains(casa)) {
+//				PontuacaoCasa pc = pontuarDiagonalEsquerda(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
+//				pontuadasEmDiagonalEsquerda.add(pc);
+//				casasPontuadasEmDiagonalEsquerda.addAll(pc.posicaoPecas.cellSet());
+//			}
+//		}
 		pontuar();
 		System.out.println(pontuacao + " - " + tabuleiro.toString());
 	}
 
 	private void pontuar() {
-		for (PontuacaoCasa pontuacaoCasa : casasPontuadasEmLinha) {
+		for (PontuacaoCasa pontuacaoCasa : pontuadasEmLinha) {
 			try {
 				pontuacaoPecasConsecutivas(pontuacaoCasa);
 			} catch (Exception e) {
 				System.err.println(e.getMessage() + " - linha\n");
 			}
 		}
-		 for (PontuacaoCasa pontuacaoCasa : casasPontuadasEmColuna) {
+		 for (PontuacaoCasa pontuacaoCasa : pontuadasEmColuna) {
 			 try {
 					pontuacaoPecasConsecutivas(pontuacaoCasa);
 				} catch (Exception e) {
 					System.err.println(e.getMessage()+ " - coluna\n");
 				}
 		}
-		 for (PontuacaoCasa pontuacaoCasa : casasPontuadasEmDiagonalDireita) {
+		 for (PontuacaoCasa pontuacaoCasa : pontuadasEmDiagonalDireita) {
 			 try {
 					pontuacaoPecasConsecutivas(pontuacaoCasa);
 				} catch (Exception e) {
 					System.err.println(e.getMessage()+ " - diag \\\n");
 				}
 		}
-		 for (PontuacaoCasa pontuacaoCasa : casasPontuadasEmDiagonalEsquerda) {
+		 for (PontuacaoCasa pontuacaoCasa : pontuadasEmDiagonalEsquerda) {
 			 try {
 					pontuacaoPecasConsecutivas(pontuacaoCasa);
 				} catch (Exception e) {
@@ -99,51 +133,35 @@ public class RegrasPontuacao {
 		boolean vezIA = pontuacaoCasa.posicaoPecas.containsValue(GomokuJogo.PRETA);
 		
 		switch (pontuacaoCasa.qntPecasConsecutiva) {
-			case 1:
-//				if (vezIA) {
-//					pontuacao += pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
-//					pontuacao += 1;
-//				} else{
-//					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
-//					pontuacao -= 10;					
-//				}
-//				
-				break;
 			case 2:
 				if (vezIA) {
-					pontuacao += pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
 					pontuacao += 100;
 				} else{
-					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
 					pontuacao -= 300;					
 				}
 				
 				break;
 			case 3:
 				if (vezIA) {
-					pontuacao += pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
-					pontuacao += 200;
+					pontuacao += 250;
 				} else{
-					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
-					pontuacao -= 500;					
+					pontuacao -= 450;					
 				}	
 				
 				break;
 			case 4:
 				if (vezIA) {
-					pontuacao += pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
-					pontuacao += 400;
+					pontuacao += 800;
 				} else{
-					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
-					pontuacao -= 1500;					
+					pontuacao -= 4200;					
 				}	
 				
 				break;
 			case 5:
 				if (vezIA) {
-					pontuacao = Integer.MAX_VALUE;
+					pontuacao = 7483648;
 				} else{
-					pontuacao = Integer.MIN_VALUE;					
+					pontuacao = -7483648;					
 				}	
 				break;
 
@@ -152,38 +170,6 @@ public class RegrasPontuacao {
 		}
 	}
 
-	 /**
-	  * Pontucao de casas livres TODO 
-	  * @param qntCasasLivre
-	  * @return
-	  */
-	 protected int pontuacaoCasasLivresIA(int qntCasasLivre) {	
-		 int retorno = 0;
-//		 for (int i = 1; i < (GomokuJogo.check * GomokuJogo.tamanhoTabuleiro); i++) {
-//			if (qntCasasLivre == i) {
-//				retorno += (5 * i);
-//			} else if (qntCasasLivre < i) {
-//				break;
-//			}
-//		}
-		 return retorno;
-	}
-	 /**
-	  * Pontucao de casas livres do adversario TODO 
-	  * @param qntCasasLivre
-	  * @return
-	  */
-	 protected int pontuacaoCasasLivresAdversario(int qntCasasLivre) {	
-		 int retorno = 0;
-//		 for (int i = 1; i < (GomokuJogo.check * GomokuJogo.tamanhoTabuleiro); i++) {
-//			if (qntCasasLivre == i) {
-//				retorno -= (5 * i);
-//			} else if (qntCasasLivre < i) {
-//				break;
-//			}
-//		}
-		 return retorno;
-	}
 
 	 /**
 		 * A partir da posição da peça é percorrido a linha para verificar qntidade de peças consecutivas e casas vazias
