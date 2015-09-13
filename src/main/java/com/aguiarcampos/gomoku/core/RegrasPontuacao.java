@@ -100,14 +100,14 @@ public class RegrasPontuacao {
 		
 		switch (pontuacaoCasa.qntPecasConsecutiva) {
 			case 1:
-				if (vezIA) {
-					pontuacao += pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
-					pontuacao += 1;
-				} else{
-					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
-					pontuacao -= 10;					
-				}
-				
+//				if (vezIA) {
+//					pontuacao += pontuacaoCasasLivresIA(pontuacaoCasa.qntCasasLivres);
+//					pontuacao += 1;
+//				} else{
+//					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
+//					pontuacao -= 10;					
+//				}
+//				
 				break;
 			case 2:
 				if (vezIA) {
@@ -125,7 +125,7 @@ public class RegrasPontuacao {
 					pontuacao += 200;
 				} else{
 					pontuacao += pontuacaoCasasLivresAdversario(pontuacaoCasa.qntCasasLivres);
-					pontuacao -= 1000;					
+					pontuacao -= 500;					
 				}	
 				
 				break;
@@ -159,13 +159,13 @@ public class RegrasPontuacao {
 	  */
 	 protected int pontuacaoCasasLivresIA(int qntCasasLivre) {	
 		 int retorno = 0;
-		 for (int i = 1; i < (GomokuJogo.check * GomokuJogo.tamanhoTabuleiro); i++) {
-			if (qntCasasLivre == i) {
-				retorno += (5 * i);
-			} else if (qntCasasLivre < i) {
-				break;
-			}
-		}
+//		 for (int i = 1; i < (GomokuJogo.check * GomokuJogo.tamanhoTabuleiro); i++) {
+//			if (qntCasasLivre == i) {
+//				retorno += (5 * i);
+//			} else if (qntCasasLivre < i) {
+//				break;
+//			}
+//		}
 		 return retorno;
 	}
 	 /**
@@ -175,13 +175,13 @@ public class RegrasPontuacao {
 	  */
 	 protected int pontuacaoCasasLivresAdversario(int qntCasasLivre) {	
 		 int retorno = 0;
-		 for (int i = 1; i < (GomokuJogo.check * GomokuJogo.tamanhoTabuleiro); i++) {
-			if (qntCasasLivre == i) {
-				retorno -= (5 * i);
-			} else if (qntCasasLivre < i) {
-				break;
-			}
-		}
+//		 for (int i = 1; i < (GomokuJogo.check * GomokuJogo.tamanhoTabuleiro); i++) {
+//			if (qntCasasLivre == i) {
+//				retorno -= (5 * i);
+//			} else if (qntCasasLivre < i) {
+//				break;
+//			}
+//		}
 		 return retorno;
 	}
 

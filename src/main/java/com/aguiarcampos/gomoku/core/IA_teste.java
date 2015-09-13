@@ -62,7 +62,7 @@ public class IA_teste {
 	
 	//TODO resolver problema se profundidade maior que o maximo de proximas jogadas
 	public Tabuleiro miniM(int profundidade, Tabuleiro tabuleiro, String jogadorAtual, int alfa, int beta) {
-		//TODO nunca usado
+
 		if (tabuleiro.isFimJogo()) {
 			tabuleiro.atualizarPontuacao();
 			return tabuleiro;// vencedor
@@ -75,7 +75,7 @@ public class IA_teste {
 		String proxJog = jogadaMax ? GomokuJogo.BRANCA : GomokuJogo.PRETA;
 
 		//cria variaveis de retorno para decidir melhor jogada
-		int melhorValor = jogadaMax ? this.alfa : this.beta ;
+		int melhorValor = jogadaMax ? alfa : beta;
 		
 		tabuleiro.setNotaTabuleiro(melhorValor);
 		
@@ -96,14 +96,14 @@ public class IA_teste {
 						tabuleiro.setNotaTabuleiro(novaJogada.getNotaTabuleiro());
 					}
 
-					if (tabuleiro.getNotaTabuleiro() >= this.beta) {
+					if (tabuleiro.getNotaTabuleiro() >= beta) {
 						return tabuleiro;
 					}
 				}
-				
-				if (tabuleiro.getNotaTabuleiro() > this.alfa) {
-					this.alfa = tabuleiro.getNotaTabuleiro();
+				if (tabuleiro.getNotaTabuleiro() > alfa) {
+					alfa = tabuleiro.getNotaTabuleiro();
 				}
+				
 
 			} else {//MIN
 
@@ -117,13 +117,12 @@ public class IA_teste {
 						tabuleiro.setNotaTabuleiro(novaJogada.getNotaTabuleiro());
 					}
 
-					if (tabuleiro.getNotaTabuleiro() <= this.alfa) {
+					if (tabuleiro.getNotaTabuleiro() <= alfa) {
 						return tabuleiro;
 					}
 				}
-				
-				if (tabuleiro.getNotaTabuleiro() < this.beta) {
-					this.beta = tabuleiro.getNotaTabuleiro();
+				if (tabuleiro.getNotaTabuleiro() < beta) {
+					beta = tabuleiro.getNotaTabuleiro();
 				}
 			}
 			return tabuleiro;
@@ -134,14 +133,14 @@ public class IA_teste {
 		}
 	}
 	
-	int alfa = Integer.MIN_VALUE;
-	int beta = Integer.MAX_VALUE;
 	/**
 	 * Metodo que definirá melhor pontuacao para um tabuleiro TODO 
 	 * @param tabuleiro
 	 * @return
 	 */
 	protected Tabuleiro melhorPontuacao(int profundidade, Tabuleiro tabuleiro, String jogador) {
+		int alfa = Integer.MIN_VALUE;
+		int beta = Integer.MAX_VALUE;
 		
 		if (tabuleiro.tabela.isEmpty()) {
 			return primeiraJogada(tabuleiro);
@@ -151,7 +150,8 @@ public class IA_teste {
 		boolean jogadaMax = (jogador == GomokuJogo.PRETA);
 
 		//cria variaveis de retorno para decidir melhor jogada
-
+		alfa = Integer.MIN_VALUE;
+		beta = Integer.MAX_VALUE;
 	    Tabuleiro melhorValor = miniM(profundidade, tabuleiro, jogador, alfa, beta);
 		
 		Set<Tabuleiro> tabs = new HashSet<Tabuleiro>(tabuleiro.getPossiveisJogadasTabuleiro());

@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.RowSortedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
 import com.google.common.collect.TreeBasedTable;
@@ -158,6 +159,7 @@ public class Tabuleiro {
 	/**
 	 * atualiza todas a variavel possiveisJogadas
 	 */
+	@Deprecated
 	protected void atualizarPossiveisJogadas() {
 		possiveisJogadas.removeAll(possiveisJogadas);
 		int []linhaInicial = linha();
@@ -171,6 +173,7 @@ public class Tabuleiro {
 		}
 	}
 
+	@Deprecated
 	protected int[] linha(){
 		int [] valor = new int[2];
 		valor[0] = GomokuJogo.tamanhoTabuleiro;
@@ -184,12 +187,13 @@ public class Tabuleiro {
 			}
 		}
 		
-		System.out.println(" -P " + valor[0]);
-		valor[0] = ((valor[0] - 2) < 0 || valor[0] == GomokuJogo.tamanhoTabuleiro) ? 0: (valor[0] - 2);
-		valor[1] = ((valor[1] + 2) > GomokuJogo.tamanhoTabuleiro || valor[1] == 0)? GomokuJogo.tamanhoTabuleiro : (valor[1] + 2);;
+		valor[0] = ((valor[0] - 1) < 0 || valor[0] == GomokuJogo.tamanhoTabuleiro) ? 0: (valor[0] - 1);
+		valor[1] = ((valor[1] + 1) > GomokuJogo.tamanhoTabuleiro || valor[1] == 0)? GomokuJogo.tamanhoTabuleiro : (valor[1] + 1);;
 		
 		return valor;
 	}
+	
+	@Deprecated
 	protected int[] coluna(){
 		int [] valor = new int[2];
 		valor[0] = GomokuJogo.tamanhoTabuleiro;
@@ -202,10 +206,39 @@ public class Tabuleiro {
 				valor[1] = pointY.intValue();
 			}
 		}
-		valor[0] = ((valor[0] - 2) < 0 || valor[0] == GomokuJogo.tamanhoTabuleiro) ? 0: (valor[0] - 2);
-		valor[1] = ((valor[1] + 2) > GomokuJogo.tamanhoTabuleiro || valor[1] == 0)? GomokuJogo.tamanhoTabuleiro : (valor[1] + 2);;
+		valor[0] = ((valor[0] - 1) < 0 || valor[0] == GomokuJogo.tamanhoTabuleiro) ? 0: (valor[0] - 1);
+		valor[1] = ((valor[1] + 1) > GomokuJogo.tamanhoTabuleiro || valor[1] == 0)? GomokuJogo.tamanhoTabuleiro : (valor[1] + 1);
 		
 		return valor;
+	}
+	
+	protected LimiteBusca limitesBusca(){
+		int inicioLinha = GomokuJogo.tamanhoTabuleiro;
+		int inicioColuna = GomokuJogo.tamanhoTabuleiro;
+		int limiteLinha= 0;
+		int limiteColuna = 0;
+		for (Cell<Integer, Integer, String> casa : tabela.cellSet()) {
+			if (casa.getRowKey() < inicioLinha) {
+				inicioLinha = casa.getRowKey();
+			}
+			if (casa.getRowKey() > limiteLinha) {
+				limiteLinha = casa.getRowKey();
+			}
+			if (casa.getColumnKey() < inicioColuna) {
+				inicioColuna = casa.getColumnKey();
+			}
+			if (casa.getColumnKey() > limiteColuna) {
+				limiteColuna = casa.getColumnKey();
+			}
+		}
+		
+		inicioLinha = ((inicioLinha - 1) < 0 || inicioLinha == GomokuJogo.tamanhoTabuleiro) ? 0: (inicioLinha - 1);
+		limiteLinha = ((limiteLinha + 1) > GomokuJogo.tamanhoTabuleiro || limiteLinha == 0)? GomokuJogo.tamanhoTabuleiro : (limiteLinha + 1);
+		
+		inicioColuna = ((inicioColuna - 1) < 0 || inicioColuna == GomokuJogo.tamanhoTabuleiro) ? 0: (inicioColuna - 1);
+		limiteColuna = ((limiteColuna + 1) > GomokuJogo.tamanhoTabuleiro || limiteColuna == 0)? GomokuJogo.tamanhoTabuleiro : (limiteColuna + 1);
+		
+		return new LimiteBusca(inicioLinha, limiteLinha, inicioColuna, limiteColuna);
 	}
 	
 	protected void atualizaProximaJogadaPossivel(String jogador) {
@@ -213,11 +246,12 @@ public class Tabuleiro {
 		this.possiveisJogadas.removeAll(possiveisJogadas);
 		this.possiveisJogadasTabuleiro.removeAll(possiveisJogadasTabuleiro);
 		Table<Integer, Integer, String> aux = HashBasedTable.create(tabela);
-		int []linhaInicial = linha();
-		int []colunaInicial = coluna();
+//		int []linhaInicial = linha();
+//		int []colunaInicial = coluna();
 
-		for (int linha = linhaInicial[0]; linha < linhaInicial[1]; linha++) {
-			for (int coluna = colunaInicial[0]; coluna < colunaInicial[1]; coluna++) {
+		LimiteBusca limites = limitesBusca();
+		for (int linha = limites.inicioLinha; linha < limites.limiteLinha; linha++) {
+			for (int coluna = limites.inicioColuna; coluna < limites.limiteColuna; coluna++) {
 				if (!tabela.contains(linha, coluna)) {
 					possiveisJogadas.add(new Point(linha, coluna));
 					aux.put(linha, coluna, jogador);
@@ -240,6 +274,27 @@ public class Tabuleiro {
 		}
 		saida += "Nota "+getNotaTabuleiro() + "\n#####";
 		return saida ;
+	}
+	
+	/*
+	 * Class auxiliar
+	 */
+	
+	public static class LimiteBusca {
+		public int inicioLinha;
+		public int limiteLinha;
+		public int inicioColuna;
+		public int limiteColuna;
+
+		public LimiteBusca(int inicioLinha, int limiteLinha, int inicioColuna,
+				int limiteColuna) {
+			this.inicioLinha = inicioLinha;
+			this.limiteLinha = limiteLinha;
+			this.inicioColuna = inicioColuna;
+			this.limiteColuna = limiteColuna;
+		}
+		
+		
 	}
 	
 }
