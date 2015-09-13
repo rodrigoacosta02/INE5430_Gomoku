@@ -1,18 +1,20 @@
 package com.aguiarcampos.gomoku.core;
 
+import com.google.common.collect.Table.Cell;
+
 
 public class GomokuJogo extends Tabuleiro{
 	
 	/**
 	 * indica tamanho do tabuleiro
 	 */
-	public static final int tamanhoTabuleiro = 15;
+	public static final int tamanhoTabuleiro = 5;
 
 	/**
 	 * check que representa o numero de sequencia mínima de peças seguidas para vencer o
 	 * jogo
 	 */
-	public static final int check = 5;
+	public static final int check = 3;
 
 	/**
 	 * Representação do Jogador com a peça preta
@@ -29,12 +31,7 @@ public class GomokuJogo extends Tabuleiro{
 	 */
 	public static final String BRANCA = "BRANCA";
 
-	/**
-	 * indicação do jogador da rodada atual
-	 */
-	private String jogadorAtual;
-
-	/**
+		/**
 	 * variável booleana auxiliar para determinar vencedor
 	 */
 	private static boolean vencedor = false;
@@ -50,13 +47,6 @@ public class GomokuJogo extends Tabuleiro{
 	}
 
 	/**
-	 * Retorna próximo jogador
-	 * @return
-	 */
-	public String getJogadorAtual() {
-		return jogadorAtual;
-	}
-	/**
 	 * Se vencedor = True - retorna jogador vencedor senão retorna vazio
 	 * @return
 	 */
@@ -70,6 +60,7 @@ public class GomokuJogo extends Tabuleiro{
 	public Tabuleiro getTabuleiro(){
 		return this;
 	}
+	
 	/**
 	 * Realiza jogada settando os valores
 	 * @param linha
@@ -79,7 +70,7 @@ public class GomokuJogo extends Tabuleiro{
 	 */
 	public boolean realizarJogada(int linha, int coluna) throws Exception {
 		moverPeca(linha, coluna, jogadorAtual);
-		
+		atualizaProximaJogadaPossivel(jogadorAtual);
 		//verifica se na jogada atual houve um vencedor
 		vencedor = verificarJogada(linha, coluna, jogadorAtual);
 		this.setFimJogo(vencedor);
@@ -88,10 +79,32 @@ public class GomokuJogo extends Tabuleiro{
 		if (!vencedor) {
 			jogadorAtual = jogadorAtual.equals(PRETA) ? BRANCA : PRETA;
 		}
+		
 		return true;
 	}
 	
+	public void realizarJogada(Tabuleiro tab){
+		this.copia(tab);
+		atualizaProximaJogadaPossivel(jogadorAtual);
+		//verifica se na jogada atual houve um vencedor
+		vencedor = verificarVencedor();
+		this.setFimJogo(vencedor);
+		
+		//se não existir vencedor muda de jogador
+		if (!vencedor) {
+			jogadorAtual = jogadorAtual.equals(PRETA) ? BRANCA : PRETA;
+		}
+	}
 	
+	
+	private boolean verificarVencedor() {
+		for (Cell<Integer, Integer, String> casa : tabela.cellSet()) {
+			if(verificarJogada(casa.getRowKey(), casa.getColumnKey(), casa.getValue()))
+				return true;
+		}
+		return false;
+	}
+
 	/*	
 	####################################################################
 						vertificacoes de jogadas
@@ -233,5 +246,4 @@ public class GomokuJogo extends Tabuleiro{
 		}
 		return contador;
 	}
-
 }

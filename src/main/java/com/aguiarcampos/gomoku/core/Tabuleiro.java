@@ -26,9 +26,18 @@ public class Tabuleiro {
 	@Getter
 	private Set<Point> possiveisJogadas;
 	
+	/**
+	 * Representação de todas as proximas jogadas possívies
+	 */
 	@Getter
 	private Set<Tabuleiro> possiveisJogadasTabuleiro;
 	
+	/**
+	 * indicação do jogador da rodada atual
+	 */
+	@Getter
+	protected String jogadorAtual;
+
 	@Getter
 	@Setter
 	private int notaTabuleiro;
@@ -37,6 +46,16 @@ public class Tabuleiro {
 	@Setter
 	private boolean fimJogo;
 	
+	@Getter
+	@Setter
+	int x = -1;
+	@Getter
+	@Setter
+	int y = -1;
+	public void jogada(){
+		
+	}
+	
 	/**
 	 * Construtor padrao
 	 */
@@ -44,8 +63,8 @@ public class Tabuleiro {
 		fimJogo = false;
 		notaTabuleiro = 0;
 		tabela = HashBasedTable.create();
+		possiveisJogadasTabuleiro = new  HashSet<Tabuleiro>();
 		possiveisJogadas = new HashSet<Point>();
-		possiveisJogadasTabuleiro = new HashSet<Tabuleiro>();
 		atualizarPossiveisJogadas();
 	}
 
@@ -80,7 +99,7 @@ public class Tabuleiro {
 	public boolean moverPeca(int linha, int coluna, String jogador) throws Exception {
 		
 		//validacao de peça existente na casa
-		if (jogador.equals(GomokuJogo.VAZIO)) {
+		if (!(jogador.equals(GomokuJogo.BRANCA) || jogador.equals(GomokuJogo.PRETA))) {
 			throw new Exception("jogador inexistente");
 		}
 		
@@ -89,13 +108,16 @@ public class Tabuleiro {
 		}
 		//colaca na Table a posição da jogada e o jogador
 		this.tabela.put(linha, coluna, jogador);
-		atualizarPossiveisJogadas();
+		possiveisJogadas.remove(new Point(linha, coluna));
 		atualizarPontuacao();
 		return false;
 	}
 
-	private void atualizarPontuacao() {
+	public void atualizarPontuacao() {
 		// TODO Auto-generated method stub
+		RegrasPontuacao rp = new RegrasPontuacao(this);
+		rp.pontuacao(this);
+		this.notaTabuleiro = rp.getPontuacao();
 	}
 
 	/**
@@ -108,7 +130,6 @@ public class Tabuleiro {
 		if (!this.tabela.contains(linha, coluna)) {
 			return GomokuJogo.VAZIO;
 		}
-		
 		return tabela.get(linha, coluna);
 	}
 
@@ -131,11 +152,6 @@ public class Tabuleiro {
 		this.possiveisJogadas.add(new Point(linha, coluna));
 	}
 
-	private Set<Tabuleiro> remove(Set<Point> listaPossocoes) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	/**
 	 * atualiza todas a variavel possiveisJogadas
 	 */
@@ -150,24 +166,27 @@ public class Tabuleiro {
 		}
 	}
 	
-
-	/**
-	 * atualiza todas a variavel possiveisJogadas
-	 */
-	private void atualizarPossiveisJogadasNoTabuleiro() {
+	protected void atualizaProximaJogadaPossivel(String jogador) {
+		this.possiveisJogadasTabuleiro = new HashSet<Tabuleiro>();
+		Table<Integer, Integer, String> aux = HashBasedTable.create(tabela);
 		for (Point point : possiveisJogadas) {
-			
+			aux.put(point.x, point.y, jogador);
+			Tabuleiro tab = new Tabuleiro(aux);
+			tab.x = point.x;
+			tab.y = point.y;
+			this.possiveisJogadasTabuleiro.add(tab);
+			aux.remove(point.x, point.y);
 		}
 	}
+
 	@Override
 	public String toString() {
 		String saida = "";
 		for (Cell<Integer, Integer, String> casa: tabela.cellSet()) {
 			saida += casa.getRowKey() + ", " + casa.getColumnKey() + " " + casa.getValue() + " | ";
-			if (casa.getColumnKey() == GomokuJogo.tamanhoTabuleiro -1) {
-				saida += "\n";
-			}
+			saida += "\n";
 		}
+		saida += " - "+getNotaTabuleiro();
 		return saida ;
 	}
 	

@@ -1,6 +1,7 @@
 package com.aguiarcampos.gomoku.core;
 
 import java.awt.Point;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
@@ -20,6 +21,8 @@ public class IA_teste {
 	 * Ponto(x,y) de jogada
 	 */
 	private Point jogada;
+	  private int alfa = Integer.MIN_VALUE;
+	    private int beta = Integer.MAX_VALUE;
 
 
 	public IA_teste() {
@@ -52,11 +55,11 @@ public class IA_teste {
 	
 	
 	//TODO resolver problema se profundidade maior que o maximo de proximas jogadas
-	@SuppressWarnings("unused")
-	public MelhorJogada miniM(int profundidade, Tabuleiro tabuleiro, String jogadorAtual) throws Exception {
-		//TODO validacao de vitoria 
-		if (tabuleiro.isFimJogo()) {// vencedor do board atual
-			return melhorPontuacao(tabuleiro, jogadorAtual);// vencedor
+	public Tabuleiro miniM(int profundidade, Tabuleiro tabuleiro, String jogadorAtual) {
+		//TODO nunca usado
+		if (tabuleiro.isFimJogo()) {
+			tabuleiro.atualizarPontuacao();
+			return tabuleiro;// vencedor
 		}
 		
 		//define se jogada eh MAX ou MIN
@@ -67,59 +70,61 @@ public class IA_teste {
 
 		//cria variaveis de retorno para decidir melhor jogada
 		int melhorValor = jogadaMax ? Integer.MIN_VALUE : Integer.MAX_VALUE  ;
-		Point melhorPosicaoPeca = null; 
-		MelhorJogada melhorJogada = new MelhorJogada(melhorPosicaoPeca, melhorValor);
-
+		
+		tabuleiro.setNotaTabuleiro(melhorValor);
+		
 		//verificacao de profundidade maxima da arvore
 		if (profundidade > 0) {
-			
-			//criado novo tabuleiro sendo filho do atual
-			Tabuleiro novoT = new Tabuleiro();
-			novoT.copia(tabuleiro);
-			
+			tabuleiro.atualizaProximaJogadaPossivel(jogadorAtual);
 			//lista de possiveis jogadas do tabuleiro atual
-			Set<Point> p = tabuleiro.getPossiveisJogadas();
+			Set<Tabuleiro> listaTabs = new HashSet<Tabuleiro>(tabuleiro.getPossiveisJogadasTabuleiro());
 			if (jogadaMax) {//MAX
 				
 				//percorre todos os pontos de possiveis jogadas do tabuleiro atual
-				for (Point point : p) {
-					
-					//move peca para uma posicao vazia
-					novoT.moverPeca(point.x, point.y, proxJog);
+				for (Tabuleiro novoT : listaTabs) {
 					
 					//recursao em profundidade - retornando melhorJogada
-					MelhorJogada novaJogada = miniM(profundidade - 1, novoT, proxJog);
-
+					Tabuleiro novaJogada = miniM(profundidade - 1, novoT, proxJog);
 					
-					//verificação de melhor jogada MAX, se NÃO for maior atualiza melhor jogada
-					if (!melhorJogada.potuacaoAtualMaiorQueNovaJogada(novaJogada)) {
-						melhorJogada = novaJogada;
+					if (novaJogada.getNotaTabuleiro() > tabuleiro.getNotaTabuleiro()) {
+						tabuleiro.setNotaTabuleiro(novaJogada.getNotaTabuleiro());
 					}
-					
-					//volta jogada
-					novoT.limpaCasa(point.x, point.y);
+
+					if (tabuleiro.getNotaTabuleiro() > beta) {
+						return tabuleiro;
+					}
+				}
+				
+				if (tabuleiro.getNotaTabuleiro() > alfa) {
+					alfa = tabuleiro.getNotaTabuleiro();
 				}
 
 			} else {//MIN
 
-				for (Point point : p) {
-
-					novoT.moverPeca(point.x, point.y, proxJog);
-
-					MelhorJogada novaJogada = miniM(profundidade - 1, novoT, proxJog);
+				//percorre todos os pontos de possiveis jogadas do tabuleiro atual
+				for (Tabuleiro novoT : listaTabs) {
 					
-					//verificação de melhor jogada MIN , se maior atualiza melhor jogada
-					if (melhorJogada.potuacaoAtualMaiorQueNovaJogada(novaJogada)) {
-						melhorJogada = novaJogada;
+					//recursao em profundidade - retornando melhorJogada
+					Tabuleiro novaJogada = miniM(profundidade - 1, novoT, proxJog);
+					
+					if (novaJogada.getNotaTabuleiro() < tabuleiro.getNotaTabuleiro()) {
+						tabuleiro.setNotaTabuleiro(novaJogada.getNotaTabuleiro());
 					}
-					
-					novoT.limpaCasa(point.x, point.y);
+
+					if (tabuleiro.getNotaTabuleiro() < alfa) {
+						return tabuleiro;
+					}
+				}
+				
+				if (tabuleiro.getNotaTabuleiro() < beta) {
+					beta = tabuleiro.getNotaTabuleiro();
 				}
 			}
-			return melhorJogada;
+			return tabuleiro;
 			
 		} else {
-			return melhorPontuacao(tabuleiro, jogadorAtual);
+			tabuleiro.atualizarPontuacao();
+			return tabuleiro;// vencedor
 		}
 	}
 	
@@ -128,52 +133,23 @@ public class IA_teste {
 	 * @param tabuleiro
 	 * @return
 	 */
-	protected MelhorJogada melhorPontuacao(Tabuleiro tabuleiro, String jogador) {
+	protected Tabuleiro melhorPontuacao(int profundidade, Tabuleiro tabuleiro, String jogador) {
+		//define se jogada eh MAX ou MIN
+		boolean jogadaMax = (jogador == GomokuJogo.PRETA);
 
-		MelhorJogada melhorJogada = new MelhorJogada(new Point(), Integer.MIN_VALUE);
-		MelhorJogada novaJogada ;
-		Tabuleiro novoT = new Tabuleiro();
-		novoT.copia(tabuleiro);
-		Set<Point> p = novoT.getPossiveisJogadas();
-		for (Point jogada : p) {
-			try {
-				novoT.moverPeca(jogada.x, jogada.y, jogador);
-				RegrasPontuacao rp = new RegrasPontuacao(novoT);
-				rp.pontuacaoLinha(novoT);
-				novaJogada = new MelhorJogada(jogada, rp.getPontuacao());
-				
-				if (!melhorJogada.potuacaoAtualMaiorQueNovaJogada(novaJogada)) {
-					melhorJogada = novaJogada;
-				}
-				
-				novoT.limpaCasa(jogada.x, jogada.y);
-			} catch (Exception e) {
-				e.printStackTrace();
+		//cria variaveis de retorno para decidir melhor jogada
+		Tabuleiro melhorValor = new Tabuleiro();
+		
+		melhorValor = miniM(profundidade, tabuleiro, jogador);
+		
+		Set<Tabuleiro> tabs = new HashSet<Tabuleiro>(tabuleiro.getPossiveisJogadasTabuleiro());
+
+		for (Tabuleiro novoT : tabs) {
+			if (melhorValor.getNotaTabuleiro() == novoT.getNotaTabuleiro()) {
+				return novoT;
 			}
 		}
 		
-		return melhorJogada;
+		return melhorValor;
 	}
-
-	
-	/*####################*/
-	
-	/**
-	 * Estrutura de representacao da melhor jogada
-	 */
-	protected static class MelhorJogada {
-		public Point jogada;
-		public int pontuacao;
-
-		public MelhorJogada(Point jogada, int pontuacao) {
-			this.jogada = jogada;
-			this.pontuacao = pontuacao;
-		}
-		
-		public boolean potuacaoAtualMaiorQueNovaJogada(MelhorJogada novaJogada){
-			return (pontuacao > novaJogada.pontuacao) ;
-		}
-
-	}
-
 }

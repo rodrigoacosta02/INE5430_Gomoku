@@ -24,6 +24,8 @@ import pacoteTestes.Pontuacao;
 import com.aguiarcampos.gomoku.core.Computer;
 import com.aguiarcampos.gomoku.core.GomokuJogo;
 import com.aguiarcampos.gomoku.core.RegrasPontuacao;
+import com.aguiarcampos.gomoku.core.Tabuleiro;
+import com.google.common.collect.Table.Cell;
 
 
 /**
@@ -48,6 +50,7 @@ public class GomokuPanel extends JPanel implements ActionListener {
 		state = new GomokuJogo();
 		addMouseListener(new GomokuListener());
 		JButton reiniciarPartida;
+		c = new Computer(this);
 		reiniciarPartida = new JButton("Nova partida");
 		reiniciarPartida.setVerticalTextPosition(AbstractButton.BOTTOM);
 		reiniciarPartida.setHorizontalTextPosition(AbstractButton.CENTER);
@@ -70,19 +73,20 @@ public class GomokuPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (comandoReiniciar.equals(e.getActionCommand())) {
 			state = new GomokuJogo();
+			c = new Computer(this);
 			addMouseListener(new GomokuListener());
 			repaint();
-//			c.pararJogo();
-			
 		}
 		
 		if (comandoInicioComp.equals(e.getActionCommand())) {
 			//TODO pc inicia game
 			System.out.println("I will beat you");
-			c = new Computer(this);
+			try {
+				c.jogar();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 		}
-		
-
 	}
 
 	class GomokuListener extends MouseAdapter {
@@ -136,24 +140,22 @@ public class GomokuPanel extends JPanel implements ActionListener {
 					yTop + gridWidth));
 		}
 
-		for (int row = 0; row < GomokuJogo.tamanhoTabuleiro; row++)
-			for (int col = 0; col < GomokuJogo.tamanhoTabuleiro; col++) {
-				String piece = state.getValorCasa(row, col);
-				if (!piece.equals(GomokuJogo.VAZIO)) {
-					Color c = (piece.equals(GomokuJogo.PRETA)) ? Color.BLACK
-							: Color.WHITE;
-					g2.setColor(c);
+		
+		for (Cell<Integer, Integer, String> casas : state.tabela.cellSet()) {
+			Color c = (casas.getValue().equals(GomokuJogo.PRETA)) ? Color.BLACK
+					: Color.WHITE;
+			g2.setColor(c);
 
-					double xCenter = xLeft + col * squareWidth;
-					double yCenter = yTop + row * squareWidth;
-					Ellipse2D.Double circle = new Ellipse2D.Double(xCenter
-							- pieceDiameter / 2, yCenter - pieceDiameter / 2,
-							pieceDiameter, pieceDiameter);
-					g2.fill(circle);
-					g2.setColor(Color.black);
-					g2.draw(circle);
-				}
-			}
+			double xCenter = xLeft + casas.getColumnKey() * squareWidth;
+			double yCenter = yTop + casas.getRowKey() * squareWidth;
+			Ellipse2D.Double circle = new Ellipse2D.Double(xCenter
+					- pieceDiameter / 2, yCenter - pieceDiameter / 2,
+					pieceDiameter, pieceDiameter);
+			g2.fill(circle);
+			g2.setColor(Color.black);
+			g2.draw(circle);
+				
+		}	
 	}
 
 	/**
@@ -184,5 +186,25 @@ public class GomokuPanel extends JPanel implements ActionListener {
 		}
 		return false;
 	}
-
+	
+	/**
+	 * seta jogada escolhida e redesenha tabuleiro
+	 * @param tab
+	 * @return
+	 */
+	public boolean iaJoga(Tabuleiro tab){
+		state.realizarJogada(tab);
+		repaint();
+		String vencedor = state.getVencedor();
+		// exibe uma msg de vitória na tela
+		if (!vencedor.equals(GomokuJogo.VAZIO)){
+			JOptionPane
+					.showMessageDialog(
+							frame,
+							(vencedor.equals(GomokuJogo.PRETA)) ? "Vencedor pedras PRETAS!"
+									: "Vencedor pedras BRANCAS!!");
+			return true;
+		}
+		return true;
+	}
 }

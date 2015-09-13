@@ -3,11 +3,6 @@ package com.aguiarcampos.gomoku.core;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.aguiarcampos.gomoku.core.GomokuJogo;
-import com.aguiarcampos.gomoku.core.IA_teste;
-import com.aguiarcampos.gomoku.core.Tabuleiro;
-import com.aguiarcampos.gomoku.core.IA_teste.MelhorJogada;
-
 public class IA_testeTest {
 
 	@BeforeClass
@@ -25,9 +20,9 @@ public class IA_testeTest {
 		
 		IA_teste ia = new IA_teste();
 		
-		MelhorJogada m = ia.melhorPontuacao(tab, GomokuJogo.PRETA);
-		System.out.println(m.jogada);
-		System.out.println(m.pontuacao);
+		Tabuleiro m = ia.melhorPontuacao(0, tab, GomokuJogo.BRANCA);
+		System.out.println(m.toString());
+		System.out.println(m.getNotaTabuleiro());
 	}
 	
 	
