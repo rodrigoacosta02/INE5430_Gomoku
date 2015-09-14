@@ -1,16 +1,28 @@
 package com.aguiarcampos.gomoku.core;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import com.aguiarcampos.gomoku.gui.GomokuPanel;
 
-public class Computer extends IA_teste {
+public class Computer extends IA_teste implements Runnable{
 	private GomokuPanel panel;
-	
+	private boolean running;
+	@Getter
+	private Thread t;
+	@Setter
+	private boolean fimJogo;
+
 	public Computer(GomokuPanel gomokuPanel) {
 		super();
+		fimJogo = false;
+		running = true;
+
 		this.panel = gomokuPanel;
+		t = new Thread(this);
 	}
 	
-	public void jogar() throws Exception {
+	private void jogar() throws Exception {
 		// TODO Auto-generated method stub
 		String jog = panel.state.getJogadorAtual();
 		Tabuleiro mj = this.melhorPontuacao(3, panel.state.getTabuleiro(), jog);
@@ -23,4 +35,29 @@ public class Computer extends IA_teste {
 			e1.printStackTrace();
 		}
 	}
+
+	public void run() {
+
+		while(!fimJogo){
+			while(!running){
+				Thread.yield();
+			}
+			try {
+				jogar();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+
+    public void pauseThread() throws InterruptedException
+    {
+        running = false;
+    }
+
+    public void resumeThread()
+    {
+        running = true;
+    }
 }

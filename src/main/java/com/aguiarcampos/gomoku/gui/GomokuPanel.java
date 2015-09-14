@@ -82,7 +82,7 @@ public class GomokuPanel extends JPanel implements ActionListener {
 			//TODO pc inicia game
 			System.out.println("I will beat you");
 			try {
-				c.jogar();
+				c.getT().start();
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -181,9 +181,12 @@ public class GomokuPanel extends JPanel implements ActionListener {
 								frame,
 								(vencedor.equals(GomokuJogo.PRETA)) ? "Vencedor pedras PRETAS!"
 										: "Vencedor pedras BRANCAS!!");
+				c.setFimJogo(true);
+				c.resumeThread();
 				return true;
 			}
 		}
+		c.resumeThread();
 		return false;
 	}
 	
@@ -197,6 +200,12 @@ public class GomokuPanel extends JPanel implements ActionListener {
 		repaint();
 		String vencedor = state.getVencedor();
 		// exibe uma msg de vitória na tela
+		try {
+			c.pauseThread();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if (!vencedor.equals(GomokuJogo.VAZIO)){
 			JOptionPane
 					.showMessageDialog(

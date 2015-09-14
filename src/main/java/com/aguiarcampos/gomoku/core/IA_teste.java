@@ -149,7 +149,7 @@ public class IA_teste {
 		}
 		
 		//define se jogada eh MAX ou MIN
-		boolean jogadaMax = (jogador == GomokuJogo.PRETA);
+		boolean jogadaMax = (jogador == this.pecaComptador);
 
 		//cria variaveis de retorno para decidir melhor jogada
 		alfa = Integer.MIN_VALUE;
