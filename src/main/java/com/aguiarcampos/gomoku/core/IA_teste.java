@@ -15,28 +15,24 @@ public class IA_teste {
 	/**
 	 * Representaçao da peça do Computador
 	 */
-	public static String pecaComptador;
+	public static String pecaComputador;
 
 	/**
 	 * Ponto(x,y) de jogada
 	 */
 	private Point jogada;
 	
-
-
 	public IA_teste() {
 		this.jogada = new Point();
 	}
 
 	/**
 	 * Contrutor
-	 * @param gomokuJogo
 	 * @param pecaComptador
 	 */
-	public IA_teste(GomokuJogo gomokuJogo, String pecaComptador) {
+	public IA_teste(String pecaComptador) {
 		this();
-		this.gomokuJogo = gomokuJogo;
-		this.pecaComptador = pecaComptador;
+		IA_teste.pecaComputador = pecaComptador;
 	}
 	
 	/**
@@ -51,7 +47,7 @@ public class IA_teste {
 			jogada.y = random.nextInt((max-min) + 1 ) + min;
 			System.out.println(jogada.x + " - " + jogada.y);
 			try {
-				tab.moverPeca(jogada.x, jogada.y, GomokuJogo.PRETA);
+				tab.moverPeca(jogada.x, jogada.y, this.pecaComputador);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -69,10 +65,10 @@ public class IA_teste {
 		}
 		
 		//define se jogada eh MAX ou MIN
-		boolean jogadaMax = (jogadorAtual == GomokuJogo.PRETA);
+		boolean jogadaMax = (jogadorAtual.equals(this.pecaComputador));
 		
 		//define proximo jogador da arvore
-		String proxJog = jogadaMax ? GomokuJogo.BRANCA : GomokuJogo.PRETA;
+		String proxJog = jogadorAtual.equals(GomokuJogo.PRETA) ? GomokuJogo.BRANCA : GomokuJogo.PRETA;
 
 		//cria variaveis de retorno para decidir melhor jogada
 		int melhorValor = jogadaMax ? alfa : beta;
@@ -101,10 +97,9 @@ public class IA_teste {
 					}
 				}
 				if (tabuleiro.getNotaTabuleiro() > tabuleiro.alfa){//alfa) {
-					alfa = tabuleiro.getNotaTabuleiro();
+//					alfa = tabuleiro.getNotaTabuleiro();
 					tabuleiro.alfa = tabuleiro.getNotaTabuleiro();
 				}
-				
 
 			} else {//MIN
 
@@ -123,7 +118,7 @@ public class IA_teste {
 					}
 				}
 				if (tabuleiro.getNotaTabuleiro() < tabuleiro.beta){ //beta) {
-					beta = tabuleiro.getNotaTabuleiro();
+//					beta = tabuleiro.getNotaTabuleiro();
 					tabuleiro.beta = tabuleiro.getNotaTabuleiro();
 				}
 			}
@@ -147,9 +142,6 @@ public class IA_teste {
 		if (tabuleiro.tabela.isEmpty()) {
 			return primeiraJogada(tabuleiro);
 		}
-		
-		//define se jogada eh MAX ou MIN
-		boolean jogadaMax = (jogador == this.pecaComptador);
 
 		//cria variaveis de retorno para decidir melhor jogada
 		alfa = Integer.MIN_VALUE;

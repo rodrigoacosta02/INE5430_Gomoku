@@ -3,16 +3,13 @@ package com.aguiarcampos.gomoku.core;
 import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.RowSortedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
-import com.google.common.collect.TreeBasedTable;
 
 
 public class Tabuleiro {

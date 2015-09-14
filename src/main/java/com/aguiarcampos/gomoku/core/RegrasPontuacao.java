@@ -1,10 +1,7 @@
 package com.aguiarcampos.gomoku.core;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.swing.JOptionPane;
 
 import lombok.Getter;
 
@@ -37,7 +34,7 @@ public class RegrasPontuacao {
 		gj.tabela.putAll(tabuleiro.tabela);
 		for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
 			if (gj.verificarJogada(casa.getRowKey(), casa.getColumnKey(), casa.getValue())) {
-				if (tabuleiro.jogadorAtual.equals(GomokuJogo.PRETA)) {
+				if (tabuleiro.jogadorAtual.equals(IA_teste.pecaComputador)) {
 					pontuacao = Integer.MAX_VALUE;
 				} else {
 					pontuacao = Integer.MIN_VALUE;
@@ -137,7 +134,7 @@ public class RegrasPontuacao {
 		}
 		
 		//verifica se a pontuacao é MIN ou MAX
-		boolean vezIA = pontuacaoCasa.posicaoPecas.containsValue(GomokuJogo.PRETA);
+		boolean vezIA = pontuacaoCasa.posicaoPecas.containsValue(tabuleiro.jogadorAtual);
 		
 		switch (pontuacaoCasa.qntPecasConsecutiva) {
 			case 2:
@@ -158,9 +155,9 @@ public class RegrasPontuacao {
 				break;
 			case 4:
 				if (vezIA) {
-					pontuacao += 2400;
+					pontuacao += 6450;
 				} else{
-					pontuacao -= 4200;					
+					pontuacao -= 8200;					
 				}	
 				
 				break;

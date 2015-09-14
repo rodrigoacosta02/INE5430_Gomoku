@@ -14,7 +14,7 @@ public class Computer extends IA_teste implements Runnable{
 	private boolean fimJogo;
 
 	public Computer(GomokuPanel gomokuPanel) {
-		super();
+		super(GomokuJogo.PRETA);
 		fimJogo = false;
 		running = true;
 
@@ -22,13 +22,21 @@ public class Computer extends IA_teste implements Runnable{
 		t = new Thread(this);
 	}
 	
+	public Computer(GomokuPanel gomokuPanel, String jogador) {
+		super(jogador);
+		fimJogo = false;
+		running = true;
+		this.panel = gomokuPanel;
+		t = new Thread(this);
+		t.start();
+	}
+
 	private void jogar() throws Exception {
-		// TODO Auto-generated method stub
 		String jog = panel.state.getJogadorAtual();
 		Tabuleiro mj = this.melhorPontuacao(3, panel.state.getTabuleiro(), jog);
 		mj.jogadorAtual = jog;
 		System.out.println("Jogo IA!");
-		System.out.println(mj.getNotaTabuleiro() + " - " );
+		System.out.println(mj.getNotaTabuleiro());
 		try {
 			panel.iaJoga(mj);
 		} catch (Exception e1) {
@@ -49,15 +57,12 @@ public class Computer extends IA_teste implements Runnable{
 			}
 		}
 	}
-	
 
-    public void pauseThread() throws InterruptedException
-    {
+    public void pauseThread() throws InterruptedException{
         running = false;
     }
 
-    public void resumeThread()
-    {
+    public void resumeThread(){
         running = true;
     }
 }

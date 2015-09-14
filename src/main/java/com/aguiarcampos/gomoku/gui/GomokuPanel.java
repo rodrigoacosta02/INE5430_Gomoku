@@ -19,11 +19,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import pacoteTestes.Pontuacao;
-
 import com.aguiarcampos.gomoku.core.Computer;
 import com.aguiarcampos.gomoku.core.GomokuJogo;
-import com.aguiarcampos.gomoku.core.RegrasPontuacao;
 import com.aguiarcampos.gomoku.core.Tabuleiro;
 import com.google.common.collect.Table.Cell;
 
@@ -50,7 +47,6 @@ public class GomokuPanel extends JPanel implements ActionListener {
 		state = new GomokuJogo();
 		addMouseListener(new GomokuListener());
 		JButton reiniciarPartida;
-		c = new Computer(this);
 		reiniciarPartida = new JButton("Nova partida");
 		reiniciarPartida.setVerticalTextPosition(AbstractButton.BOTTOM);
 		reiniciarPartida.setHorizontalTextPosition(AbstractButton.CENTER);
@@ -80,6 +76,7 @@ public class GomokuPanel extends JPanel implements ActionListener {
 		
 		if (comandoInicioComp.equals(e.getActionCommand())) {
 			//TODO pc inicia game
+			c = new Computer(this);
 			System.out.println("I will beat you");
 			try {
 				c.getT().start();
@@ -185,6 +182,9 @@ public class GomokuPanel extends JPanel implements ActionListener {
 				c.resumeThread();
 				return true;
 			}
+		}
+		if (c == null) {
+			c= new Computer(this, GomokuJogo.BRANCA);
 		}
 		c.resumeThread();
 		return false;
