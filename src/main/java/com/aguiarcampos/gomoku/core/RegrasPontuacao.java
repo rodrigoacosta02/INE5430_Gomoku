@@ -32,11 +32,17 @@ public class RegrasPontuacao {
 		this.tabuleiro = tabuleiro;
 	}
 	
-	public boolean verificaVencedor(Tabuleiro tabuleiro){
+	public boolean verificaVencedor(){
 		GomokuJogo gj = new GomokuJogo();
 		gj.tabela.putAll(tabuleiro.tabela);
-		for (Cell<Integer, Integer, String> casa : gj.tabela.cellSet()) {
+		for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
 			if (gj.verificarJogada(casa.getRowKey(), casa.getColumnKey(), casa.getValue())) {
+				if (tabuleiro.jogadorAtual.equals(GomokuJogo.PRETA)) {
+					pontuacao = Integer.MAX_VALUE;
+				} else {
+					pontuacao = Integer.MIN_VALUE;
+				}
+				
 				return true;
 			}
 		}
@@ -50,38 +56,39 @@ public class RegrasPontuacao {
 	public void pontuacao() {
 
 		// percorre casas preenchidas
-				for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
-					pontuadasEmLinha.add(pontuarLinha(casa.getRowKey(), casa.getColumnKey(), casa.getValue()));
-					pontuadasEmColuna.add(pontuarColuna(casa.getRowKey(), casa.getColumnKey(), casa.getValue()));
-					pontuadasEmDiagonalDireita.add(pontuarDiagonalDireita(casa.getRowKey(), casa.getColumnKey(), casa.getValue()));
-					pontuadasEmDiagonalEsquerda.add(pontuarDiagonalEsquerda(casa.getRowKey(), casa.getColumnKey(), casa.getValue()));
+		for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
+			if (!casasPontuadasEmLinha.contains(casa)) {
+				PontuacaoCasa pc = pontuarLinha(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
+				if (pc.qntPecasConsecutiva > 1) {
+					pontuadasEmLinha.add(pc);
+					casasPontuadasEmLinha.addAll(pc.posicaoPecas.cellSet());
 				}
-//		// percorre casas preenchidas
-//		for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
-//			if (!casasPontuadasEmLinha.contains(casa)) {
-//				PontuacaoCasa pc = pontuarLinha(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-//				pontuadasEmLinha.add(pc);
-//				casasPontuadasEmLinha.addAll(pc.posicaoPecas.cellSet());
-//			}
-//			
-//			if (!casasPontuadasEmColuna.contains(casa)) {
-//				PontuacaoCasa pc = pontuarColuna(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-//				pontuadasEmColuna.add(pc);
-//				casasPontuadasEmColuna.addAll(pc.posicaoPecas.cellSet());
-//			}
-//			
-//			if (!casasPontuadasEmDiagonalDireita.contains(casa)) {
-//				PontuacaoCasa pc = pontuarDiagonalDireita(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-//				pontuadasEmDiagonalDireita.add(pc);
-//				casasPontuadasEmDiagonalDireita.addAll(pc.posicaoPecas.cellSet());
-//			}
-//			
-//			if (!casasPontuadasEmDiagonalEsquerda.contains(casa)) {
-//				PontuacaoCasa pc = pontuarDiagonalEsquerda(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-//				pontuadasEmDiagonalEsquerda.add(pc);
-//				casasPontuadasEmDiagonalEsquerda.addAll(pc.posicaoPecas.cellSet());
-//			}
-//		}
+			}
+			
+			if (!casasPontuadasEmColuna.contains(casa)) {
+				PontuacaoCasa pc = pontuarColuna(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
+				if (pc.qntPecasConsecutiva > 1) {
+					pontuadasEmColuna.add(pc);
+					casasPontuadasEmColuna.addAll(pc.posicaoPecas.cellSet());
+				}
+			}
+			
+			if (!casasPontuadasEmDiagonalDireita.contains(casa)) {
+				PontuacaoCasa pc = pontuarDiagonalDireita(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
+				if (pc.qntPecasConsecutiva > 1) {
+					pontuadasEmDiagonalDireita.add(pc);
+					casasPontuadasEmDiagonalDireita.addAll(pc.posicaoPecas.cellSet());
+				}
+			}
+			
+			if (!casasPontuadasEmDiagonalEsquerda.contains(casa)) {
+				PontuacaoCasa pc = pontuarDiagonalEsquerda(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
+				if (pc.qntPecasConsecutiva > 1) {
+					pontuadasEmDiagonalEsquerda.add(pc);
+					casasPontuadasEmDiagonalEsquerda.addAll(pc.posicaoPecas.cellSet());
+				}
+			}
+		}
 		pontuar();
 		System.out.println(pontuacao + " - " + tabuleiro.toString());
 	}
@@ -151,7 +158,7 @@ public class RegrasPontuacao {
 				break;
 			case 4:
 				if (vezIA) {
-					pontuacao += 800;
+					pontuacao += 1200;
 				} else{
 					pontuacao -= 4200;					
 				}	

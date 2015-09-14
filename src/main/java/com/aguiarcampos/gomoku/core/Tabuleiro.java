@@ -48,6 +48,9 @@ public class Tabuleiro {
 	@Setter
 	private boolean fimJogo;
 	
+	public int alfa;
+	public int beta;
+	
 	@Getter
 	@Setter
 	int x = -1;
@@ -62,6 +65,8 @@ public class Tabuleiro {
 	 * Construtor padrao
 	 */
 	public Tabuleiro() {
+		alfa = Integer.MIN_VALUE;
+		beta = Integer.MAX_VALUE;
 		fimJogo = false;
 		notaTabuleiro = 0;
 		tabela = HashBasedTable.create();
@@ -89,7 +94,11 @@ public class Tabuleiro {
 
 	public boolean isFimJogo(){
 		RegrasPontuacao rp = new RegrasPontuacao(this);
-		return rp.verificaVencedor(this);
+		boolean retorno = rp.verificaVencedor();
+		if (retorno) {
+			this.notaTabuleiro = rp.getPontuacao();
+		}
+		return retorno;
 	}
 	
 	/**
@@ -237,7 +246,6 @@ public class Tabuleiro {
 		
 		inicioColuna = ((inicioColuna - 1) < 0 || inicioColuna == GomokuJogo.tamanhoTabuleiro) ? 0: (inicioColuna - 1);
 		limiteColuna = ((limiteColuna + 1) > GomokuJogo.tamanhoTabuleiro || limiteColuna == 0)? GomokuJogo.tamanhoTabuleiro : (limiteColuna + 1);
-		
 		return new LimiteBusca(inicioLinha, limiteLinha, inicioColuna, limiteColuna);
 	}
 	
@@ -250,8 +258,9 @@ public class Tabuleiro {
 //		int []colunaInicial = coluna();
 
 		LimiteBusca limites = limitesBusca();
-		for (int linha = limites.inicioLinha; linha < limites.limiteLinha; linha++) {
-			for (int coluna = limites.inicioColuna; coluna < limites.limiteColuna; coluna++) {
+		System.out.println(limites.toString());
+		for (int linha = limites.inicioLinha; linha <= limites.limiteLinha; linha++) {
+			for (int coluna = limites.inicioColuna; coluna <= limites.limiteColuna; coluna++) {
 				if (!tabela.contains(linha, coluna)) {
 					possiveisJogadas.add(new Point(linha, coluna));
 					aux.put(linha, coluna, jogador);
@@ -294,7 +303,12 @@ public class Tabuleiro {
 			this.limiteColuna = limiteColuna;
 		}
 		
-		
+		@Override
+		public String toString() {
+			String msg = "linha - ini= " + inicioLinha +" - fim= " + limiteLinha;
+			msg += " | Coluna - ini= " + inicioColuna +" - fim= " + limiteColuna;
+			return msg;
+		}
 	}
 	
 }

@@ -90,18 +90,19 @@ public class IA_teste {
 				for (Tabuleiro novoT : listaTabs) {
 					
 					//recursao em profundidade - retornando melhorJogada
-					Tabuleiro novaJogada = miniM(profundidade - 1, novoT, proxJog, alfa, beta);
+					Tabuleiro novaJogada = miniM(profundidade - 1, novoT, proxJog, tabuleiro.alfa, tabuleiro.beta);//alfa, beta);
 					
 					if (novaJogada.getNotaTabuleiro() > tabuleiro.getNotaTabuleiro()) {
 						tabuleiro.setNotaTabuleiro(novaJogada.getNotaTabuleiro());
 					}
 
-					if (tabuleiro.getNotaTabuleiro() >= beta) {
+					if (tabuleiro.getNotaTabuleiro() >= tabuleiro.beta){//beta) {
 						return tabuleiro;
 					}
 				}
-				if (tabuleiro.getNotaTabuleiro() > alfa) {
+				if (tabuleiro.getNotaTabuleiro() > tabuleiro.alfa){//alfa) {
 					alfa = tabuleiro.getNotaTabuleiro();
+					tabuleiro.alfa = tabuleiro.getNotaTabuleiro();
 				}
 				
 
@@ -111,18 +112,19 @@ public class IA_teste {
 				for (Tabuleiro novoT : listaTabs) {
 					
 					//recursao em profundidade - retornando melhorJogada
-					Tabuleiro novaJogada = miniM(profundidade - 1, novoT, proxJog, alfa, beta);
+					Tabuleiro novaJogada = miniM(profundidade - 1, novoT, proxJog, tabuleiro.alfa, tabuleiro.beta);//alfa, beta);
 					
 					if (novaJogada.getNotaTabuleiro() < tabuleiro.getNotaTabuleiro()) {
 						tabuleiro.setNotaTabuleiro(novaJogada.getNotaTabuleiro());
 					}
 
-					if (tabuleiro.getNotaTabuleiro() <= alfa) {
+					if (tabuleiro.getNotaTabuleiro() <= tabuleiro.alfa){ //alfa) {
 						return tabuleiro;
 					}
 				}
-				if (tabuleiro.getNotaTabuleiro() < beta) {
+				if (tabuleiro.getNotaTabuleiro() < tabuleiro.beta){ //beta) {
 					beta = tabuleiro.getNotaTabuleiro();
+					tabuleiro.beta = tabuleiro.getNotaTabuleiro();
 				}
 			}
 			return tabuleiro;
