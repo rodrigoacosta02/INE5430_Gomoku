@@ -57,9 +57,6 @@ public class Tabuleiro {
 	@Getter
 	@Setter
 	int y = -1;
-	public void jogada(){
-		
-	}
 	
 	/**
 	 * Construtor padrao

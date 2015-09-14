@@ -59,7 +59,7 @@ public class RegrasPontuacao {
 		for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
 			if (!casasPontuadasEmLinha.contains(casa)) {
 				PontuacaoCasa pc = pontuarLinha(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-				if (pc.qntPecasConsecutiva > 1) {
+				if (pc.qntPecasConsecutiva > 1 && pc.qntCasasLivres > 0) {
 					pontuadasEmLinha.add(pc);
 					casasPontuadasEmLinha.addAll(pc.posicaoPecas.cellSet());
 				}
@@ -67,7 +67,7 @@ public class RegrasPontuacao {
 			
 			if (!casasPontuadasEmColuna.contains(casa)) {
 				PontuacaoCasa pc = pontuarColuna(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-				if (pc.qntPecasConsecutiva > 1) {
+				if (pc.qntPecasConsecutiva > 1 && pc.qntCasasLivres > 0) {
 					pontuadasEmColuna.add(pc);
 					casasPontuadasEmColuna.addAll(pc.posicaoPecas.cellSet());
 				}
@@ -75,7 +75,7 @@ public class RegrasPontuacao {
 			
 			if (!casasPontuadasEmDiagonalDireita.contains(casa)) {
 				PontuacaoCasa pc = pontuarDiagonalDireita(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-				if (pc.qntPecasConsecutiva > 1) {
+				if (pc.qntPecasConsecutiva > 1 && pc.qntCasasLivres > 0) {
 					pontuadasEmDiagonalDireita.add(pc);
 					casasPontuadasEmDiagonalDireita.addAll(pc.posicaoPecas.cellSet());
 				}
@@ -83,14 +83,14 @@ public class RegrasPontuacao {
 			
 			if (!casasPontuadasEmDiagonalEsquerda.contains(casa)) {
 				PontuacaoCasa pc = pontuarDiagonalEsquerda(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-				if (pc.qntPecasConsecutiva > 1) {
+				if (pc.qntPecasConsecutiva > 1 && pc.qntCasasLivres > 0) {
 					pontuadasEmDiagonalEsquerda.add(pc);
 					casasPontuadasEmDiagonalEsquerda.addAll(pc.posicaoPecas.cellSet());
 				}
 			}
 		}
 		pontuar();
-		System.out.println(pontuacao + " - " + tabuleiro.toString());
+//		System.out.println(pontuacao + " - " + tabuleiro.toString());
 	}
 
 	private void pontuar() {
@@ -158,7 +158,7 @@ public class RegrasPontuacao {
 				break;
 			case 4:
 				if (vezIA) {
-					pontuacao += 1200;
+					pontuacao += 2400;
 				} else{
 					pontuacao -= 4200;					
 				}	
