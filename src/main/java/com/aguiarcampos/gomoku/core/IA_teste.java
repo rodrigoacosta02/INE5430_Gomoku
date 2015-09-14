@@ -121,7 +121,7 @@ public class IA_teste {
 			
 		} else {
 			tabuleiro.atualizarPontuacao();
-			return tabuleiro;// vencedor
+			return tabuleiro;
 		}
 	}
 	

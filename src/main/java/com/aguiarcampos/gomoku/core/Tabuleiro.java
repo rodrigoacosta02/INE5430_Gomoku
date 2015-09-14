@@ -272,10 +272,10 @@ public class Tabuleiro {
 	@Override
 	public String toString() {
 		String saida = "";
-		for (Cell<Integer, Integer, String> casa: tabela.cellSet()) {
-			saida +="("+casa.getRowKey() + ", " + casa.getColumnKey() + ") " + casa.getValue() + " | ";
-		}
-		saida += "Nota "+getNotaTabuleiro() + "\n#####";
+//		for (Cell<Integer, Integer, String> casa: tabela.cellSet()) {
+//			saida +="("+casa.getRowKey() + ", " + casa.getColumnKey() + ") " + casa.getValue() + " | ";
+//		}
+//		saida += "Nota "+getNotaTabuleiro() + "\n#####";
 		return saida ;
 	}
 	

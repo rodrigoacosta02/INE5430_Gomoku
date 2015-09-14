@@ -35,9 +35,9 @@ public class RegrasPontuacao {
 		for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
 			if (gj.verificarJogada(casa.getRowKey(), casa.getColumnKey(), casa.getValue())) {
 				if (tabuleiro.jogadorAtual.equals(IA_teste.pecaComputador)) {
-					pontuacao = Integer.MAX_VALUE;
+					pontuacao = 748306480;
 				} else {
-					pontuacao = Integer.MIN_VALUE;
+					pontuacao = 74830480;
 				}
 				
 				return true;
@@ -141,7 +141,7 @@ public class RegrasPontuacao {
 				if (vezIA) {
 					pontuacao += 100;
 				} else{
-					pontuacao -= 300;					
+					pontuacao -= 10000;					
 				}
 				
 				break;
@@ -149,21 +149,21 @@ public class RegrasPontuacao {
 				if (vezIA) {
 					pontuacao += 250;
 				} else{
-					pontuacao -= 400;					
+					pontuacao -= 62500;					
 				}	
 				
 				break;
 			case 4:
 				if (vezIA) {
-					pontuacao += 6450;
+					pontuacao += 2500;
 				} else{
-					pontuacao -= 7200;					
+					pontuacao -= 6250000;					
 				}	
 				
 				break;
 			case 5:
 				if (vezIA) {
-					pontuacao = 7483648;
+					pontuacao = 74830648;
 				} else{
 					pontuacao = -7483648;					
 				}	
