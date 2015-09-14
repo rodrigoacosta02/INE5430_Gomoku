@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import com.aguiarcampos.gomoku.gui.GomokuPanel;
 
-public class Computer extends IA_teste implements Runnable{
+public class Computer extends IA_miniMax implements Runnable{
 	private GomokuPanel panel;
 	private boolean running;
 	@Getter

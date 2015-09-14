@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class IA_teste {
+public class IA_miniMax {
 
 	/**
 	 * Representaçao da peça do Computador
@@ -17,7 +17,10 @@ public class IA_teste {
 	 */
 	private Point jogada;
 	
-	public IA_teste() {
+	/**
+	 * Construtor Padrão
+	 */
+	public IA_miniMax() {
 		this.jogada = new Point();
 	}
 
@@ -25,13 +28,15 @@ public class IA_teste {
 	 * Contrutor
 	 * @param pecaComptador
 	 */
-	public IA_teste(String pecaComptador) {
+	public IA_miniMax(String pecaComptador) {
 		this();
-		IA_teste.pecaComputador = pecaComptador;
+		IA_miniMax.pecaComputador = pecaComptador;
 	}
 	
 	/**
 	 * inicia com a primeiro valor do primeiro movimento
+	 * Uma estratégia de jogo onde a primeira jogada deve ser na região 
+	 * Central do tabuleiro onde se possa ganhar em todas as direções
 	 */
 	private Tabuleiro primeiraJogada(Tabuleiro tab){
 			//reduz a area de jogada para poder criar 5 em linha em todas as direcoes TODO
@@ -50,8 +55,15 @@ public class IA_teste {
 			return tab;
 	}
 	
-	
-	//TODO resolver problema se profundidade maior que o maximo de proximas jogadas
+	/**
+	 * MiniMax
+	 * @param profundidade
+	 * @param tabuleiro
+	 * @param jogadorAtual
+	 * @param alfa
+	 * @param beta
+	 * @return
+	 */
 	public Tabuleiro miniM(int profundidade, Tabuleiro tabuleiro, String jogadorAtual, int alfa, int beta) {
 
 		if (tabuleiro.isFimJogo()) {
@@ -92,7 +104,6 @@ public class IA_teste {
 					}
 				}
 				if (tabuleiro.getNotaTabuleiro() > tabuleiro.alfa){//alfa) {
-//					alfa = tabuleiro.getNotaTabuleiro();
 					tabuleiro.alfa = tabuleiro.getNotaTabuleiro();
 				}
 
@@ -113,7 +124,6 @@ public class IA_teste {
 					}
 				}
 				if (tabuleiro.getNotaTabuleiro() < tabuleiro.beta){ //beta) {
-//					beta = tabuleiro.getNotaTabuleiro();
 					tabuleiro.beta = tabuleiro.getNotaTabuleiro();
 				}
 			}
@@ -134,17 +144,17 @@ public class IA_teste {
 		int alfa = Integer.MIN_VALUE;
 		int beta = Integer.MAX_VALUE;
 		
+		//Primeira jogada | caso IA inicie o jogo
 		if (tabuleiro.tabela.isEmpty()) {
 			return primeiraJogada(tabuleiro);
 		}
 
-		//cria variaveis de retorno para decidir melhor jogada
-		alfa = Integer.MIN_VALUE;
-		beta = Integer.MAX_VALUE;
+		//Chama miniMax para decidir melhor jogada
 	    Tabuleiro melhorValor = miniM(profundidade, tabuleiro, jogador, alfa, beta);
 		
 		Set<Tabuleiro> tabs = new HashSet<Tabuleiro>(tabuleiro.getPossiveisJogadasTabuleiro());
 
+		//Busca pela jogada que detem os mesmos pontos de melhorJogada
 		for (Tabuleiro novoT : tabs) {
 			if (melhorValor.getNotaTabuleiro() == novoT.getNotaTabuleiro()) {
 				return novoT;

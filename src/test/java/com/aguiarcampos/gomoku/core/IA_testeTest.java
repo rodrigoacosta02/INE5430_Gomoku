@@ -18,7 +18,7 @@ public class IA_testeTest {
 		
 		tab.moverPeca(0, 2, GomokuJogo.PRETA);
 		
-		IA_teste ia = new IA_teste();
+		IA_miniMax ia = new IA_miniMax();
 		
 		Tabuleiro m = ia.melhorPontuacao(0, tab, GomokuJogo.BRANCA);
 		System.out.println(m.toString());

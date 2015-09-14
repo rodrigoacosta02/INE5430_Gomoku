@@ -215,6 +215,10 @@ public class Tabuleiro {
 		return valor;
 	}
 	
+	/**
+	 * metodo que busca otimizar a busca em relacao a posicao das pecas do tabuleiro
+	 * @return
+	 */
 	protected LimiteBusca limitesBusca(){
 		int inicioLinha = Integer.MAX_VALUE;
 		int inicioColuna = Integer.MAX_VALUE;
@@ -247,13 +251,14 @@ public class Tabuleiro {
 		return new LimiteBusca(inicioLinha, limiteLinha, inicioColuna, limiteColuna);
 	}
 	
+	/**
+	 * Atualiza listas de possíveis jogadas  e possĩveis jogadas do tabuleiro
+	 * @param jogador
+	 */
 	protected void atualizaProximaJogadaPossivel(String jogador) {
-//		this.atualizarPossiveisJogadas();
 		this.possiveisJogadas.removeAll(possiveisJogadas);
 		this.possiveisJogadasTabuleiro.removeAll(possiveisJogadasTabuleiro);
 		Table<Integer, Integer, String> aux = HashBasedTable.create(tabela);
-//		int []linhaInicial = linha();
-//		int []colunaInicial = coluna();
 
 		LimiteBusca limites = limitesBusca();
 //		System.out.println(limites.toString());
