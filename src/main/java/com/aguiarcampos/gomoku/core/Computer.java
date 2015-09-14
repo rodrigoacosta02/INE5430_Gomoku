@@ -45,7 +45,6 @@ public class Computer extends IA_teste implements Runnable{
 	}
 
 	public void run() {
-
 		while(!fimJogo){
 			while(!running){
 				Thread.yield();

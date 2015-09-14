@@ -8,11 +8,6 @@ import java.util.Set;
 public class IA_teste {
 
 	/**
-	 * refenrencia de game
-	 */
-	private GomokuJogo gomokuJogo;
-	
-	/**
 	 * Representaçao da peça do Computador
 	 */
 	public static String pecaComputador;

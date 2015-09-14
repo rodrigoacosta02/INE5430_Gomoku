@@ -56,34 +56,34 @@ public class RegrasPontuacao {
 		for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
 			if (!casasPontuadasEmLinha.contains(casa)) {
 				PontuacaoCasa pc = pontuarLinha(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-				if (pc.qntPecasConsecutiva > 1 && pc.qntCasasLivres > 0) {
+				if (pc.qntPecasConsecutiva > 1 && (pc.qntCasasLivres + pc.qntPecasConsecutiva) >= GomokuJogo.check) {
 					pontuadasEmLinha.add(pc);
-					casasPontuadasEmLinha.addAll(pc.posicaoPecas.cellSet());
 				}
+				casasPontuadasEmLinha.addAll(pc.posicaoPecas.cellSet());
 			}
 			
 			if (!casasPontuadasEmColuna.contains(casa)) {
 				PontuacaoCasa pc = pontuarColuna(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-				if (pc.qntPecasConsecutiva > 1 && pc.qntCasasLivres > 0) {
+				if (pc.qntPecasConsecutiva > 1 && (pc.qntCasasLivres + pc.qntPecasConsecutiva) >= GomokuJogo.check) {
 					pontuadasEmColuna.add(pc);
-					casasPontuadasEmColuna.addAll(pc.posicaoPecas.cellSet());
 				}
+				casasPontuadasEmColuna.addAll(pc.posicaoPecas.cellSet());
 			}
 			
 			if (!casasPontuadasEmDiagonalDireita.contains(casa)) {
 				PontuacaoCasa pc = pontuarDiagonalDireita(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-				if (pc.qntPecasConsecutiva > 1 && pc.qntCasasLivres > 0) {
+				if (pc.qntPecasConsecutiva > 1 && (pc.qntCasasLivres + pc.qntPecasConsecutiva) >= GomokuJogo.check) {
 					pontuadasEmDiagonalDireita.add(pc);
-					casasPontuadasEmDiagonalDireita.addAll(pc.posicaoPecas.cellSet());
 				}
+				casasPontuadasEmDiagonalDireita.addAll(pc.posicaoPecas.cellSet());
 			}
 			
 			if (!casasPontuadasEmDiagonalEsquerda.contains(casa)) {
 				PontuacaoCasa pc = pontuarDiagonalEsquerda(casa.getRowKey(), casa.getColumnKey(), casa.getValue());
-				if (pc.qntPecasConsecutiva > 1 && pc.qntCasasLivres > 0) {
+				if (pc.qntPecasConsecutiva > 1 && (pc.qntCasasLivres + pc.qntPecasConsecutiva) >= GomokuJogo.check) {
 					pontuadasEmDiagonalEsquerda.add(pc);
-					casasPontuadasEmDiagonalEsquerda.addAll(pc.posicaoPecas.cellSet());
 				}
+				casasPontuadasEmDiagonalEsquerda.addAll(pc.posicaoPecas.cellSet());
 			}
 		}
 		pontuar();
@@ -149,7 +149,7 @@ public class RegrasPontuacao {
 				if (vezIA) {
 					pontuacao += 250;
 				} else{
-					pontuacao -= 450;					
+					pontuacao -= 400;					
 				}	
 				
 				break;
@@ -157,7 +157,7 @@ public class RegrasPontuacao {
 				if (vezIA) {
 					pontuacao += 6450;
 				} else{
-					pontuacao -= 8200;					
+					pontuacao -= 7200;					
 				}	
 				
 				break;
@@ -196,7 +196,7 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(linha, verificaColuna, jogador);
 				} else if (this.tabuleiro.getValorCasa(linha, verificaColuna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
-					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+					if (pontuacaoCasa.qntCasasLivres >= GomokuJogo.check) {
 						break;
 					} 
 					continue;
@@ -213,7 +213,7 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(linha, verificaColuna, jogador);
 				} else if (this.tabuleiro.getValorCasa(linha, verificaColuna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
-					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+					if (pontuacaoCasa.qntCasasLivres >= GomokuJogo.check*2) {
 						break;
 					} 
 					continue;
@@ -244,7 +244,7 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(verificaLinha, coluna, jogador);
 				} else if (this.tabuleiro.getValorCasa(verificaLinha, coluna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
-					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+					if (pontuacaoCasa.qntCasasLivres >= GomokuJogo.check) {
 						break;
 					} 
 					continue;
@@ -261,7 +261,7 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(verificaLinha, coluna, jogador);
 				} else if (this.tabuleiro.getValorCasa(verificaLinha, coluna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
-					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+					if (pontuacaoCasa.qntCasasLivres >= GomokuJogo.check*2) {
 						break;
 					} 
 					continue;
@@ -294,7 +294,7 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(verificaLinha, verificaColuna, jogador);
 				} else if (this.tabuleiro.getValorCasa(verificaLinha, verificaColuna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
-					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+					if (pontuacaoCasa.qntCasasLivres >= GomokuJogo.check) {
 						break;
 					} 
 					continue;
@@ -312,7 +312,7 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(verificaLinha, verificaColuna, jogador);
 				} else if (this.tabuleiro.getValorCasa(verificaLinha, verificaColuna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
-					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+					if (pontuacaoCasa.qntCasasLivres >= GomokuJogo.check*2) {
 						break;
 					} 
 					continue;
@@ -345,7 +345,7 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(verificaLinha, verificaColuna, jogador);
 				} else if (this.tabuleiro.getValorCasa(verificaLinha, verificaColuna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
-					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+					if (pontuacaoCasa.qntCasasLivres >= GomokuJogo.check) {
 						break;
 					} 
 					continue;
@@ -363,7 +363,7 @@ public class RegrasPontuacao {
 					pontuacaoCasa.posicaoPecas.put(verificaLinha, verificaColuna, jogador);
 				} else if (this.tabuleiro.getValorCasa(verificaLinha, verificaColuna).equals(GomokuJogo.VAZIO)) {
 					pontuacaoCasa.qntCasasLivres++;
-					if (pontuacaoCasa.qntCasasLivres > GomokuJogo.check) {
+					if (pontuacaoCasa.qntCasasLivres >= GomokuJogo.check*2) {
 						break;
 					} 
 					continue;
