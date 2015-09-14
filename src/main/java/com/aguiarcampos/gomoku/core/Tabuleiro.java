@@ -116,12 +116,10 @@ public class Tabuleiro {
 		//colaca na Table a posição da jogada e o jogador
 		this.tabela.put(linha, coluna, jogador);
 		possiveisJogadas.remove(new Point(linha, coluna));
-//		atualizarPontuacao();
 		return false;
 	}
 
 	public void atualizarPontuacao() {
-		// TODO Auto-generated method stub
 		RegrasPontuacao rp = new RegrasPontuacao(this);
 		rp.pontuacao();
 		this.notaTabuleiro = rp.getPontuacao();
@@ -219,12 +217,14 @@ public class Tabuleiro {
 	 * metodo que busca otimizar a busca em relacao a posicao das pecas do tabuleiro
 	 * @return
 	 */
-	protected LimiteBusca limitesBusca(){
+	@Deprecated
+	protected LimiteBusca limitesBusca22(){
 		int inicioLinha = Integer.MAX_VALUE;
 		int inicioColuna = Integer.MAX_VALUE;
 		int limiteLinha= Integer.MIN_VALUE;
 		int limiteColuna = Integer.MIN_VALUE;
 		for (Cell<Integer, Integer, String> casa : tabela.cellSet()) {
+			
 			if (casa.getRowKey() < inicioLinha) {
 				inicioLinha = casa.getRowKey();
 			}
@@ -255,12 +255,13 @@ public class Tabuleiro {
 	 * Atualiza listas de possíveis jogadas  e possĩveis jogadas do tabuleiro
 	 * @param jogador
 	 */
-	protected void atualizaProximaJogadaPossivel(String jogador) {
+	@Deprecated
+	protected void atualizaProximaJogadaPossivel22(String jogador) {
 		this.possiveisJogadas.removeAll(possiveisJogadas);
 		this.possiveisJogadasTabuleiro.removeAll(possiveisJogadasTabuleiro);
 		Table<Integer, Integer, String> aux = HashBasedTable.create(tabela);
 
-		LimiteBusca limites = limitesBusca();
+		LimiteBusca limites = limitesBusca22();
 //		System.out.println(limites.toString());
 		for (int linha = limites.inicioLinha; linha <= limites.limiteLinha; linha++) {
 			for (int coluna = limites.inicioColuna; coluna <= limites.limiteColuna; coluna++) {
@@ -278,13 +279,72 @@ public class Tabuleiro {
 		}
 	}
 
+/**
+	 * metodo que busca otimizar a busca em relacao a posicao das pecas do tabuleiro
+	 * @return
+	 */
+	protected Set<Point> limitesBusca(){
+		Set<Point> aux = new HashSet<Point>();
+		for (Cell<Integer, Integer, String> casa : tabela.cellSet()) {
+			
+			if (casa.getRowKey() + 1 < GomokuJogo.tamanhoTabuleiro -1) {
+				aux.add(new Point(casa.getRowKey() + 1 , casa.getColumnKey()));
+				if (casa.getColumnKey() + 1 < GomokuJogo.tamanhoTabuleiro -1) {
+					aux.add(new Point(casa.getRowKey() + 1 , casa.getColumnKey() +1));
+				}
+				if (casa.getColumnKey() - 1 > -1) {
+					aux.add(new Point(casa.getRowKey() + 1 , casa.getColumnKey() -1));
+				}
+			}
+			if (casa.getRowKey() - 1 > -1) {
+				aux.add(new Point(casa.getRowKey() - 1 , casa.getColumnKey()));
+				if (casa.getColumnKey() + 1 < GomokuJogo.tamanhoTabuleiro -1) {
+					aux.add(new Point(casa.getRowKey() - 1 , casa.getColumnKey() +1));
+				}
+				if (casa.getColumnKey() - 1 > -1) {
+					aux.add(new Point(casa.getRowKey() - 1 , casa.getColumnKey() -1));
+				}
+			}
+			if (casa.getColumnKey() + 1 < GomokuJogo.tamanhoTabuleiro -1) {
+				aux.add(new Point(casa.getRowKey(), casa.getColumnKey() + 1));
+			}
+			if (casa.getColumnKey() - 1 > -1) {
+				aux.add(new Point(casa.getRowKey(), casa.getColumnKey() - 1));
+			}
+		}
+		return aux;
+	}
+	
+	/**
+	 * Atualiza listas de possíveis jogadas  e possĩveis jogadas do tabuleiro
+	 * @param jogador
+	 */
+	protected void atualizaProximaJogadaPossivel(String jogador) {
+		this.possiveisJogadas.removeAll(possiveisJogadas);
+		this.possiveisJogadasTabuleiro.removeAll(possiveisJogadasTabuleiro);
+		Table<Integer, Integer, String> aux = HashBasedTable.create(tabela);
+
+		for (Point p : limitesBusca()) {
+			if (!tabela.contains(p.x, p.y)) {
+				possiveisJogadas.add(p);
+				aux.put(p.x, p.y, jogador);
+				Tabuleiro tab = new Tabuleiro(aux);
+				tab.x = p.x;
+				tab.y = p.y;
+				tab.jogadorAtual = jogador;
+				this.possiveisJogadasTabuleiro.add(tab);
+				aux.remove(p.x, p.y);
+			}
+		}
+	}
+
 	@Override
 	public String toString() {
 		String saida = "";
-//		for (Cell<Integer, Integer, String> casa: tabela.cellSet()) {
-//			saida +="("+casa.getRowKey() + ", " + casa.getColumnKey() + ") " + casa.getValue() + " | ";
-//		}
-//		saida += "Nota "+getNotaTabuleiro() + "\n#####";
+		for (Cell<Integer, Integer, String> casa: tabela.cellSet()) {
+			saida +="("+casa.getRowKey() + ", " + casa.getColumnKey() + ") " + casa.getValue() + " | ";
+		}
+		saida += "Nota "+getNotaTabuleiro() + "\n#####";
 		return saida ;
 	}
 	

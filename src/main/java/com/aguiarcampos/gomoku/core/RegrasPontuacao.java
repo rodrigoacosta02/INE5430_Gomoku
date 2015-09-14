@@ -141,7 +141,7 @@ public class RegrasPontuacao {
 				if (vezIA) {
 					pontuacao += 100;
 				} else{
-					pontuacao -= 10000;					
+					pontuacao -= 500;					
 				}
 				
 				break;
@@ -149,15 +149,15 @@ public class RegrasPontuacao {
 				if (vezIA) {
 					pontuacao += 250;
 				} else{
-					pontuacao -= 62500;					
+					pontuacao -= 800;					
 				}	
 				
 				break;
 			case 4:
 				if (vezIA) {
-					pontuacao += 2500;
+					pontuacao += 6450;
 				} else{
-					pontuacao -= 6250000;					
+					pontuacao -= 7200;					
 				}	
 				
 				break;

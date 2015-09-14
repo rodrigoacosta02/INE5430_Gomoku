@@ -65,7 +65,7 @@ public class IA_miniMax {
 	 * @return
 	 */
 	public Tabuleiro miniM(int profundidade, Tabuleiro tabuleiro, String jogadorAtual, int alfa, int beta) {
-
+		//caso jogada representar fim da partida retorna tabuleiro com a pontuação
 		if (tabuleiro.isFimJogo()) {
 			tabuleiro.atualizarPontuacao();
 			return tabuleiro;// vencedor
@@ -77,7 +77,6 @@ public class IA_miniMax {
 		//define proximo jogador da arvore
 		String proxJog = jogadorAtual.equals(GomokuJogo.PRETA) ? GomokuJogo.BRANCA : GomokuJogo.PRETA;
 
-		//cria variaveis de retorno para decidir melhor jogada
 		int melhorValor = jogadaMax ? alfa : beta;
 		
 		tabuleiro.setNotaTabuleiro(melhorValor);

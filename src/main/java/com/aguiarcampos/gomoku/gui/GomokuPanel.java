@@ -40,7 +40,7 @@ public class GomokuPanel extends JPanel implements ActionListener {
 	public GomokuJogo state;
 	private JFrame frame;
 	private Computer c;
-
+int i = 0;
 	public GomokuPanel(JFrame frame) {
 		super();
 		this.frame = frame;
@@ -111,6 +111,7 @@ public class GomokuPanel extends JPanel implements ActionListener {
 	}
 
 	public void paintComponent(Graphics g) {
+		
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
@@ -152,7 +153,6 @@ public class GomokuPanel extends JPanel implements ActionListener {
 			g2.fill(circle);
 			g2.setColor(Color.black);
 			g2.draw(circle);
-				
 		}	
 	}
 
@@ -166,6 +166,7 @@ public class GomokuPanel extends JPanel implements ActionListener {
 	 * @throws Exception 
 	 */
 	public boolean verificacaoJogada(int linha, int coluna) throws Exception {
+		System.err.println("Jogada - " + ++i);	
 		if (linha >= 0 && linha < GomokuJogo.tamanhoTabuleiro && coluna >= 0 && coluna < GomokuJogo.tamanhoTabuleiro
 				&& state.getValorCasa(linha, coluna).equals(GomokuJogo.VAZIO)
 				&& state.getVencedor().equals(GomokuJogo.VAZIO)) {
@@ -197,6 +198,7 @@ public class GomokuPanel extends JPanel implements ActionListener {
 	 * @return
 	 */
 	public boolean iaJoga(Tabuleiro tab){
+		System.err.println("Jogada - " + ++i);	
 		state.realizarJogada(tab);
 		repaint();
 		String vencedor = state.getVencedor();
