@@ -216,10 +216,10 @@ public class Tabuleiro {
 	}
 	
 	protected LimiteBusca limitesBusca(){
-		int inicioLinha = GomokuJogo.tamanhoTabuleiro;
-		int inicioColuna = GomokuJogo.tamanhoTabuleiro;
-		int limiteLinha= 0;
-		int limiteColuna = 0;
+		int inicioLinha = Integer.MAX_VALUE;
+		int inicioColuna = Integer.MAX_VALUE;
+		int limiteLinha= Integer.MIN_VALUE;
+		int limiteColuna = Integer.MIN_VALUE;
 		for (Cell<Integer, Integer, String> casa : tabela.cellSet()) {
 			if (casa.getRowKey() < inicioLinha) {
 				inicioLinha = casa.getRowKey();
@@ -234,12 +234,16 @@ public class Tabuleiro {
 				limiteColuna = casa.getColumnKey();
 			}
 		}
+		inicioLinha--;
+		inicioColuna--;
 		
-		inicioLinha = ((inicioLinha - 1) < 0 || inicioLinha == GomokuJogo.tamanhoTabuleiro) ? 0: (inicioLinha - 1);
-		limiteLinha = ((limiteLinha + 1) > GomokuJogo.tamanhoTabuleiro || limiteLinha == 0)? GomokuJogo.tamanhoTabuleiro : (limiteLinha + 1);
+		inicioLinha = ((inicioLinha) < 0 || inicioLinha > (GomokuJogo.tamanhoTabuleiro-1)) ? 0: (inicioLinha);
+		inicioColuna = ((inicioColuna) < 0 || inicioColuna > (GomokuJogo.tamanhoTabuleiro-1)) ? 0: (inicioColuna);
 		
-		inicioColuna = ((inicioColuna - 1) < 0 || inicioColuna == GomokuJogo.tamanhoTabuleiro) ? 0: (inicioColuna - 1);
-		limiteColuna = ((limiteColuna + 1) > GomokuJogo.tamanhoTabuleiro || limiteColuna == 0)? GomokuJogo.tamanhoTabuleiro : (limiteColuna + 1);
+		limiteLinha++;
+		limiteColuna++;
+		limiteLinha = ((limiteLinha) >= GomokuJogo.tamanhoTabuleiro || limiteLinha <= 0)? (GomokuJogo.tamanhoTabuleiro -1) : (limiteLinha);
+		limiteColuna = ((limiteColuna) >= GomokuJogo.tamanhoTabuleiro || limiteColuna <= 0)? (GomokuJogo.tamanhoTabuleiro -1) : (limiteColuna);
 		return new LimiteBusca(inicioLinha, limiteLinha, inicioColuna, limiteColuna);
 	}
 	
@@ -252,7 +256,7 @@ public class Tabuleiro {
 //		int []colunaInicial = coluna();
 
 		LimiteBusca limites = limitesBusca();
-		System.out.println(limites.toString());
+//		System.out.println(limites.toString());
 		for (int linha = limites.inicioLinha; linha <= limites.limiteLinha; linha++) {
 			for (int coluna = limites.inicioColuna; coluna <= limites.limiteColuna; coluna++) {
 				if (!tabela.contains(linha, coluna)) {
