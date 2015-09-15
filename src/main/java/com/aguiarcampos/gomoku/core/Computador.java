@@ -59,9 +59,11 @@ public class Computador extends IA_miniMax implements Runnable{
 
     public void pauseThread() throws InterruptedException{
         running = false;
+//        panel.setVezIA(false);
     }
 
     public void resumeThread(){
         running = true;
+//        panel.setVezIA(true);
     }
 }

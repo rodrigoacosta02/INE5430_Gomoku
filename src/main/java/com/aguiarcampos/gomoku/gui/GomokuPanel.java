@@ -19,6 +19,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import com.aguiarcampos.gomoku.core.Computador;
 import com.aguiarcampos.gomoku.core.GomokuJogo;
 import com.aguiarcampos.gomoku.core.Tabuleiro;
@@ -46,12 +49,12 @@ int i = 0;
 		this.frame = frame;
 		state = new GomokuJogo();
 		addMouseListener(new GomokuListener());
-		JButton reiniciarPartida;
-		reiniciarPartida = new JButton("Nova partida");
-		reiniciarPartida.setVerticalTextPosition(AbstractButton.BOTTOM);
-		reiniciarPartida.setHorizontalTextPosition(AbstractButton.CENTER);
-		reiniciarPartida.setMnemonic(KeyEvent.VK_R);
-		reiniciarPartida.setActionCommand(comandoReiniciar);
+//		JButton reiniciarPartida;
+//		reiniciarPartida = new JButton("Nova partida");
+//		reiniciarPartida.setVerticalTextPosition(AbstractButton.BOTTOM);
+//		reiniciarPartida.setHorizontalTextPosition(AbstractButton.CENTER);
+//		reiniciarPartida.setMnemonic(KeyEvent.VK_R);
+//		reiniciarPartida.setActionCommand(comandoReiniciar);
 		
 		JButton computadorIniciaPartida;
 		computadorIniciaPartida = new JButton("Computador inicia partida");
@@ -59,21 +62,21 @@ int i = 0;
 		computadorIniciaPartida.setHorizontalTextPosition(AbstractButton.CENTER);
 		computadorIniciaPartida.setActionCommand(comandoInicioComp);
 		
-		reiniciarPartida.addActionListener(this);
+//		reiniciarPartida.addActionListener(this);
 		computadorIniciaPartida.addActionListener(this);
-		add(reiniciarPartida);
+//		add(reiniciarPartida);
 		add(computadorIniciaPartida);
 
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (comandoReiniciar.equals(e.getActionCommand())) {
-			state = new GomokuJogo();
-			c.getT().interrupt();
-			c = new Computador(this);
-			addMouseListener(new GomokuListener());
-			repaint();
-		}
+//		if (comandoReiniciar.equals(e.getActionCommand())) {
+//			state = new GomokuJogo();
+//			c.getT().interrupt();
+//			c = new Computador(this);
+//			addMouseListener(new GomokuListener());
+//			repaint();
+//		}
 		
 		if (comandoInicioComp.equals(e.getActionCommand())) {
 			//TODO pc inicia game
@@ -155,7 +158,9 @@ int i = 0;
 			g2.draw(circle);
 		}	
 	}
-
+//@Getter
+//@Setter
+//	private boolean vezIA = false;
 	/**
 	 * verificação se local do clique está dentro das delimitações do
 	 * tabuleiro se o valor da casa que foi clicada está vazia e se já
@@ -166,6 +171,9 @@ int i = 0;
 	 * @throws Exception 
 	 */
 	public boolean verificacaoJogada(int linha, int coluna) throws Exception {
+//		if (vezIA) {
+//			return false;
+//		}
 		System.err.println("JogadaHumano - " + ++i);	
 		if (linha >= 0 && linha < GomokuJogo.tamanhoTabuleiro && coluna >= 0 && coluna < GomokuJogo.tamanhoTabuleiro
 				&& state.getValorCasa(linha, coluna).equals(GomokuJogo.VAZIO)
@@ -198,6 +206,9 @@ int i = 0;
 	 * @return
 	 */
 	public boolean iaJoga(Tabuleiro tab){
+//		if (!vezIA) {
+//			return false;
+//		}
 		System.err.println("JogadaIA - " + ++i);	
 		state.realizarJogada(tab);
 		repaint();
@@ -206,7 +217,6 @@ int i = 0;
 		try {
 			c.pauseThread();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (!vencedor.equals(GomokuJogo.VAZIO)){

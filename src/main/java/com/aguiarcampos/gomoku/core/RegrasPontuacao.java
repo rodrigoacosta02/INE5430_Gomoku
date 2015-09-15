@@ -13,22 +13,36 @@ public class RegrasPontuacao {
 
 	@Getter
 	private int pontuacao = 0;
+	
+	/*
+	 * Listas de Pontuacaocasa serão percorriadas para serem pontuadas
+	 */
 	private Set<PontuacaoCasa> pontuadasEmLinha = new HashSet<RegrasPontuacao.PontuacaoCasa>();
 	private Set<PontuacaoCasa> pontuadasEmColuna = new HashSet<RegrasPontuacao.PontuacaoCasa>();
 	private Set<PontuacaoCasa> pontuadasEmDiagonalDireita = new HashSet<RegrasPontuacao.PontuacaoCasa>();
 	private Set<PontuacaoCasa> pontuadasEmDiagonalEsquerda = new HashSet<RegrasPontuacao.PontuacaoCasa>();
 
+	/*
+	 * Listas auxiliar para evitar duplicidade na pontuacao
+	 */
 	private Set<Cell<Integer, Integer, String>> casasPontuadasEmLinha = new HashSet<Cell<Integer,Integer,String>>();
 	private Set<Cell<Integer, Integer, String>> casasPontuadasEmColuna = new HashSet<Cell<Integer, Integer, String>>();
 	private Set<Cell<Integer, Integer, String>> casasPontuadasEmDiagonalDireita = new HashSet<Cell<Integer, Integer, String>>();
 	private Set<Cell<Integer, Integer, String>> casasPontuadasEmDiagonalEsquerda = new HashSet<Cell<Integer, Integer, String>>();
 
+	/**
+	 * Pontuacao do tabuleiro
+	 */
 	private Tabuleiro tabuleiro;
 	
 	public RegrasPontuacao(Tabuleiro tabuleiro) {
 		this.tabuleiro = tabuleiro;
 	}
 	
+	/**
+	 * Verificacao de vitoria
+	 * @return
+	 */
 	public boolean verificaVencedor(){
 		GomokuJogo gj = new GomokuJogo();
 		gj.tabela.putAll(tabuleiro.tabela);
@@ -89,7 +103,10 @@ public class RegrasPontuacao {
 		pontuar();
 //		System.out.println(pontuacao + " - " + tabuleiro.toString());
 	}
-
+	
+	/**
+	 * Percorre todas as casas com condições de serem pontuadas
+	 */
 	private void pontuar() {
 		for (PontuacaoCasa pontuacaoCasa : pontuadasEmLinha) {
 			try {
