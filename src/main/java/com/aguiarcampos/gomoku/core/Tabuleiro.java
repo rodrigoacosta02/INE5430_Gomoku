@@ -78,7 +78,7 @@ public class Tabuleiro {
 	}
 
 	/**
-	 * TODO rever se mantem mesmo endereco!!
+	 * Construtor 
 	 * @param tabuleiro
 	 */
 	public Tabuleiro(Tabuleiro tabuleiro){
@@ -86,6 +86,10 @@ public class Tabuleiro {
 		copia(tabuleiro);
 	}
 
+	/**
+	 * verificação se jogada representa o fim de jogo, caso verdadeiro atualiza nota do tabuleiro
+	 * @return
+	 */
 	public boolean isFimJogo(){
 		RegrasPontuacao rp = new RegrasPontuacao(this);
 		boolean retorno = rp.verificaVencedor();
@@ -119,6 +123,9 @@ public class Tabuleiro {
 		return false;
 	}
 
+	/**
+	 * Atualiza Pontuação do tabuleiro
+	 */
 	public void atualizarPontuacao() {
 		RegrasPontuacao rp = new RegrasPontuacao(this);
 		rp.pontuacao();
@@ -143,8 +150,7 @@ public class Tabuleiro {
 	 * @param tab
 	 */
 	public void copia(Tabuleiro tab) {
-		this.tabela.putAll(tab.tabela); //TODO ver se metodo esta correto
-//		atualizarPossiveisJogadas();
+		this.tabela.putAll(tab.tabela);
 	}
 
 	/**

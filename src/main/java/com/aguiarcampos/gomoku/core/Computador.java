@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import com.aguiarcampos.gomoku.gui.GomokuPanel;
 
-public class Computer extends IA_miniMax implements Runnable{
+public class Computador extends IA_miniMax implements Runnable{
 	private GomokuPanel panel;
 	private boolean running;
 	@Getter
@@ -13,7 +13,7 @@ public class Computer extends IA_miniMax implements Runnable{
 	@Setter
 	private boolean fimJogo;
 
-	public Computer(GomokuPanel gomokuPanel) {
+	public Computador(GomokuPanel gomokuPanel) {
 		super(GomokuJogo.PRETA);
 		fimJogo = false;
 		running = true;
@@ -22,7 +22,7 @@ public class Computer extends IA_miniMax implements Runnable{
 		t = new Thread(this);
 	}
 	
-	public Computer(GomokuPanel gomokuPanel, String jogador) {
+	public Computador(GomokuPanel gomokuPanel, String jogador) {
 		super(jogador);
 		fimJogo = false;
 		running = true;

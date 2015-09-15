@@ -35,7 +35,7 @@ public class RegrasPontuacao {
 		for (Cell<Integer, Integer, String> casa : tabuleiro.tabela.cellSet()) {
 			if (gj.verificarJogada(casa.getRowKey(), casa.getColumnKey(), casa.getValue())) {
 				if (tabuleiro.jogadorAtual.equals(IA_miniMax.pecaComputador)) {
-					pontuacao = 748306480;
+					pontuacao = 79830648;
 				} else {
 					pontuacao = 74830480;
 				}
@@ -163,7 +163,7 @@ public class RegrasPontuacao {
 				break;
 			case 5:
 				if (vezIA) {
-					pontuacao = 74830648;
+					pontuacao = 748306481;
 				} else{
 					pontuacao = -7483648;					
 				}	

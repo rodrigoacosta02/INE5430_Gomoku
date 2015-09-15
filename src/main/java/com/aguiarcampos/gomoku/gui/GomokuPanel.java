@@ -19,7 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.aguiarcampos.gomoku.core.Computer;
+import com.aguiarcampos.gomoku.core.Computador;
 import com.aguiarcampos.gomoku.core.GomokuJogo;
 import com.aguiarcampos.gomoku.core.Tabuleiro;
 import com.google.common.collect.Table.Cell;
@@ -39,7 +39,7 @@ public class GomokuPanel extends JPanel implements ActionListener {
 	
 	public GomokuJogo state;
 	private JFrame frame;
-	private Computer c;
+	private Computador c;
 int i = 0;
 	public GomokuPanel(JFrame frame) {
 		super();
@@ -70,14 +70,14 @@ int i = 0;
 		if (comandoReiniciar.equals(e.getActionCommand())) {
 			state = new GomokuJogo();
 			c.getT().interrupt();
-			c = new Computer(this);
+			c = new Computador(this);
 			addMouseListener(new GomokuListener());
 			repaint();
 		}
 		
 		if (comandoInicioComp.equals(e.getActionCommand())) {
 			//TODO pc inicia game
-			c = new Computer(this);
+			c = new Computador(this);
 			System.out.println("I will beat you");
 			try {
 				c.getT().start();
@@ -186,7 +186,7 @@ int i = 0;
 			}
 		}
 		if (c == null) {
-			c= new Computer(this, GomokuJogo.BRANCA);
+			c= new Computador(this, GomokuJogo.BRANCA);
 		}
 		c.resumeThread();
 		return false;
