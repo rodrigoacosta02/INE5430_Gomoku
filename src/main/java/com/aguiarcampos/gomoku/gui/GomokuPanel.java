@@ -166,7 +166,7 @@ int i = 0;
 	 * @throws Exception 
 	 */
 	public boolean verificacaoJogada(int linha, int coluna) throws Exception {
-		System.err.println("Jogada - " + ++i);	
+		System.err.println("JogadaHumano - " + ++i);	
 		if (linha >= 0 && linha < GomokuJogo.tamanhoTabuleiro && coluna >= 0 && coluna < GomokuJogo.tamanhoTabuleiro
 				&& state.getValorCasa(linha, coluna).equals(GomokuJogo.VAZIO)
 				&& state.getVencedor().equals(GomokuJogo.VAZIO)) {
@@ -198,7 +198,7 @@ int i = 0;
 	 * @return
 	 */
 	public boolean iaJoga(Tabuleiro tab){
-		System.err.println("Jogada - " + ++i);	
+		System.err.println("JogadaIA - " + ++i);	
 		state.realizarJogada(tab);
 		repaint();
 		String vencedor = state.getVencedor();
